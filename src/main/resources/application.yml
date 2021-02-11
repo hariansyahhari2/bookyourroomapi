@@ -19,3 +19,5 @@ spring:
     multipart:
       max-file-size: 300KB
       max-request-size: 300KB
+jwt:
+  secret: inipasswordhash

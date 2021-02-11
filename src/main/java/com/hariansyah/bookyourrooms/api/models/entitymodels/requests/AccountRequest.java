@@ -1,7 +1,5 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
-import com.hariansyah.bookyourrooms.api.entities.CustomerIdentity;
-
 public class AccountRequest {
 
     private Integer id;

@@ -8,6 +8,15 @@ import javax.persistence.*;
 @Entity(name = "account")
 public class Account extends AbstractEntity<Integer> {
 
+    public Account() {
+    }
+
+    public Account(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

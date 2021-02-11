@@ -1,16 +1,29 @@
 package com.hariansyah.bookyourrooms.api.services.impl;
 
 import com.hariansyah.bookyourrooms.api.entities.Account;
-import com.hariansyah.bookyourrooms.api.services.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
-public class AccountServiceImpl extends CommonServiceImpl<Account, Integer> implements AccountService {
+import static java.util.Collections.emptyList;
 
-    @Autowired
-    protected AccountServiceImpl(JpaRepository<Account, Integer> repository) {
-        super(repository);
+@Service
+public class AccountServiceImpl implements UserDetailsService {
+    private AccountRepository repository;
+
+    public AccountServiceImpl(AccountRepository applicationUserRepository) {
+        this.repository = applicationUserRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account applicationUser = repository.findByUsername(username);
+        if (applicationUser == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        return new User(applicationUser.getUsername(), applicationUser.getPassword(), emptyList());
     }
 }

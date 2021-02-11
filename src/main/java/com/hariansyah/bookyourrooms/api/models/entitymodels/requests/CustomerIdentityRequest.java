@@ -1,8 +1,8 @@
-package com.hariansyah.bookyourrooms.api.models.entitymodels;
+package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
 import com.hariansyah.bookyourrooms.api.enums.IdentityCategoryEnum;
 
-public class CustomerIdentityModel {
+public class CustomerIdentityRequest {
 
     private Integer id;
 
