@@ -6,7 +6,6 @@ import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.CityElement;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.RegionElement;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CityRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CityResponse;
 import com.hariansyah.bookyourrooms.api.models.entitysearch.CitySearch;
@@ -39,7 +38,7 @@ public class CityController {
     private ModelMapper modelMapper;
 
     @Autowired
-    private RegionService customerIdentityService;
+    private RegionService regionService;
 
     @Autowired
     private FileService fileService;
@@ -62,7 +61,7 @@ public class CityController {
     ) {
         City entity = modelMapper.map(model, City.class);
 
-        Region customerIdentity = customerIdentityService.findById(model.getRegionId());
+        Region customerIdentity = regionService.findById(model.getRegionId());
 
         if (customerIdentity == null) {
             throw new ForeignKeyNotFoundException();
@@ -86,7 +85,7 @@ public class CityController {
             throw new EntityNotFoundException();
         }
 
-        Region customerIdentity = customerIdentityService.findById(request.getRegionId());
+        Region customerIdentity = regionService.findById(request.getRegionId());
         entity.setRegion(customerIdentity);
 
         modelMapper.map(request, entity);
