@@ -2,6 +2,7 @@ package com.hariansyah.bookyourrooms.api.controllers;
 
 import com.hariansyah.bookyourrooms.api.entities.Booking;
 import com.hariansyah.bookyourrooms.api.entities.Room;
+import com.hariansyah.bookyourrooms.api.enums.StatusEnum;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
@@ -26,6 +27,9 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.hariansyah.bookyourrooms.api.enums.StatusEnum.CANCELLED;
+import static com.hariansyah.bookyourrooms.api.enums.StatusEnum.CHECKED_IN;
 
 @RequestMapping("/booking")
 @RestController
@@ -52,19 +56,19 @@ public class BookingController {
         throw new EntityNotFoundException();
     }
 
-    @PostMapping
-    public ResponseMessage<BookingResponse> add(
+    @PostMapping("book")
+    public ResponseMessage<BookingResponse> book(
             @RequestBody @Valid BookingRequest model
     ) {
         Booking entity = modelMapper.map(model, Booking.class);
 
-        Room customerIdentity = roomService.findById(model.getRoomId());
+        Room room = roomService.findById(model.getRoomId());
 
-        if (customerIdentity == null) {
+        if (room == null) {
             throw new ForeignKeyNotFoundException();
         }
 
-        entity.setRoom(customerIdentity);
+        entity.setRoom(room);
 
         entity = service.save(entity);
 
@@ -72,57 +76,36 @@ public class BookingController {
         return ResponseMessage.success(data);
     }
 
-    @PutMapping("/{id}")
-    public ResponseMessage<BookingResponse> edit(
-            @PathVariable Integer id,
-            @RequestBody @Valid BookingRequest request
+    @PutMapping("/{id}/cancel")
+    public ResponseMessage<BookingResponse> cancel(
+            @PathVariable Integer id
     ) {
         Booking entity = service.findById(id);
         if(entity == null) {
             throw new EntityNotFoundException();
         }
 
-        Room customerIdentity = roomService.findById(request.getRoomId());
-        entity.setRoom(customerIdentity);
-
-        modelMapper.map(request, entity);
+        entity.setStatus(CANCELLED);
         entity = service.save(entity);
 
         BookingResponse data = modelMapper.map(entity, BookingResponse.class);
         return ResponseMessage.success(data);
     }
 
-    @GetMapping("/all")
-    public ResponseMessage<List<BookingResponse>> findAll() {
-        List<Booking> entities = service.findAll();
-        List<BookingResponse> data = entities.stream()
-                .map(e -> modelMapper.map(e, BookingResponse.class))
-                .collect(Collectors.toList());
-        return ResponseMessage.success(data);
-    }
 
-    @GetMapping
-    public ResponseMessage<PagedList<BookingElement>> findAll(
-            @Valid BookingSearch model
-            ) {
-        Booking search = modelMapper.map(model, Booking.class);
+    @PutMapping("/{id}/check-in")
+    public ResponseMessage<BookingResponse> checkIn(
+            @PathVariable Integer id
+    ) {
+        Booking entity = service.findById(id);
+        if(entity == null || entity.getStatus().equals(CANCELLED)) {
+            throw new EntityNotFoundException();
+        }
 
-        Page<Booking> entityPage = service.findAll(
-                search, model.getPage(), model.getSize(), model.getSort()
-        );
-        List<Booking> entities = entityPage.toList();
+        entity.setStatus(CHECKED_IN);
+        entity = service.save(entity);
 
-        List<BookingElement> models = entities.stream()
-                .map(e -> modelMapper.map(e, BookingElement.class))
-                .collect(Collectors.toList());
-
-        PagedList<BookingElement> data = new PagedList<>(
-                models,
-                entityPage.getNumber(),
-                entityPage.getSize(),
-                entityPage.getTotalElements()
-        );
-
+        BookingResponse data = modelMapper.map(entity, BookingResponse.class);
         return ResponseMessage.success(data);
     }
 }
