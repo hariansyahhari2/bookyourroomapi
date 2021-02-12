@@ -1,5 +1,7 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Time;
 import java.time.LocalTime;
 
@@ -7,16 +9,22 @@ public class HotelRequest {
 
     private Integer id;
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String about;
 
+    @NotNull
     private LocalTime checkInTime;
 
+    @NotNull
     private LocalTime checkOutTime;
 
+    @NotNull
     private Integer companyId;
 
+    @NotNull
     private Integer cityId;
 
     public Integer getId() {

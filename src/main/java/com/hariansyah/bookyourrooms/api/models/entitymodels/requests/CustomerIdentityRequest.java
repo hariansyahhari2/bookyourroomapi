@@ -2,18 +2,25 @@ package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
 import com.hariansyah.bookyourrooms.api.enums.IdentityCategoryEnum;
 
+import javax.validation.constraints.NotBlank;
+
 public class CustomerIdentityRequest {
 
     private Integer id;
 
+    @NotBlank
     private IdentityCategoryEnum identityCategory;
 
+    @NotBlank
     private String identificationNumber;
 
+    @NotBlank
     private String firstName;
 
+    @NotBlank
     private String lastName;
 
+    @NotBlank
     private String address;
 
     public Integer getId() {

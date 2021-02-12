@@ -2,24 +2,33 @@ package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
 import com.hariansyah.bookyourrooms.api.enums.StatusEnum;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class BookingRequest {
 
     private Integer id;
 
+    @NotBlank
     private LocalDate checkInDate;
 
+    @NotBlank
     private LocalDate checkOutDate;
 
+    @NotNull
     private Integer personCount;
 
+    @NotNull
     private Integer bookedById;
 
+    @NotNull
     private Integer guestId;
 
+    @NotNull
     private Integer roomId;
 
+    @NotBlank
     private StatusEnum status;
 
     public Integer getId() {

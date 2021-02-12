@@ -1,13 +1,19 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class CityRequest {
 
     private Integer id;
 
+    @NotBlank
     private String name;
 
+    @NotNull
     private Integer regionId;
 
+    @NotNull
     public Integer getId() {
         return id;
     }

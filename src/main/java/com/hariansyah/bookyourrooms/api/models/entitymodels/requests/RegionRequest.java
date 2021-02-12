@@ -1,11 +1,13 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class RegionRequest {
 
     private Integer id;
 
+    @NotBlank
     private String name;
 
     public Integer getId() {

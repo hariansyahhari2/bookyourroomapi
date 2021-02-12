@@ -1,17 +1,25 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class RoomRequest {
 
     private Integer id;
 
+    @NotBlank
     private String roomType;
 
+    @NotBlank
     private String about;
 
+    @NotNull
     private Double price;
 
+    @NotNull
     private Integer numberOfRoom;
 
+    @NotNull
     private Integer hotelId;
 
     public Integer getId() {
