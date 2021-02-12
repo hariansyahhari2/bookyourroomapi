@@ -20,8 +20,8 @@ public class Room extends AbstractEntity<Integer> {
     @Column
     private Double price;
 
-    @Column
-    private Integer capacity;
+    @Column(name = "number_of_room")
+    private Integer numberOfRoom;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
@@ -61,12 +61,12 @@ public class Room extends AbstractEntity<Integer> {
         this.price = price;
     }
 
-    public Integer getCapacity() {
-        return capacity;
+    public Integer getNumberOfRoom() {
+        return numberOfRoom;
     }
 
-    public void setCapacity(Integer capacity) {
-        this.capacity = capacity;
+    public void setNumberOfRoom(Integer numberOfRoom) {
+        this.numberOfRoom = numberOfRoom;
     }
 
     public Hotel getHotel() {

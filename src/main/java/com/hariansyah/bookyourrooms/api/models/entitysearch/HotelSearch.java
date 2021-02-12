@@ -1,16 +1,18 @@
 package com.hariansyah.bookyourrooms.api.models.entitysearch;
 
-import java.sql.Time;
+import com.hariansyah.bookyourrooms.api.models.pagination.PageSearch;
 
-public class HotelSearch {
+import java.time.LocalTime;
+
+public class HotelSearch extends PageSearch {
 
     private Integer id;
 
     private String name;
 
-    private Time checkInTime;
+    private LocalTime checkInTime;
 
-    private Time checkOutTime;
+    private LocalTime checkOutTime;
 
     public Integer getId() {
         return id;
@@ -28,19 +30,19 @@ public class HotelSearch {
         this.name = name;
     }
 
-    public Time getCheckInTime() {
+    public LocalTime getCheckInTime() {
         return checkInTime;
     }
 
-    public void setCheckInTime(Time checkInTime) {
+    public void setCheckInTime(LocalTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 
-    public Time getCheckOutTime() {
+    public LocalTime getCheckOutTime() {
         return checkOutTime;
     }
 
-    public void setCheckOutTime(Time checkOutTime) {
+    public void setCheckOutTime(LocalTime checkOutTime) {
         this.checkOutTime = checkOutTime;
     }
 }

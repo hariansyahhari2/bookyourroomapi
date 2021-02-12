@@ -1,6 +1,8 @@
 package com.hariansyah.bookyourrooms.api.models.entitysearch;
 
-public class RoomSearch {
+import com.hariansyah.bookyourrooms.api.models.pagination.PageSearch;
+
+public class RoomSearch extends PageSearch {
 
     private Integer id;
 
@@ -8,7 +10,7 @@ public class RoomSearch {
 
     private Double price;
 
-    private Integer capacity;
+    private Integer numberOfRoom;
 
     public Integer getId() {
         return id;
@@ -34,11 +36,11 @@ public class RoomSearch {
         this.price = price;
     }
 
-    public Integer getCapacity() {
-        return capacity;
+    public Integer getNumberOfRoom() {
+        return numberOfRoom;
     }
 
-    public void setCapacity(Integer capacity) {
-        this.capacity = capacity;
+    public void setNumberOfRoom(Integer numberOfRoom) {
+        this.numberOfRoom = numberOfRoom;
     }
 }

@@ -2,31 +2,24 @@ package com.hariansyah.bookyourrooms.api.controllers;
 
 import com.hariansyah.bookyourrooms.api.entities.Booking;
 import com.hariansyah.bookyourrooms.api.entities.Room;
-import com.hariansyah.bookyourrooms.api.enums.StatusEnum;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
+import com.hariansyah.bookyourrooms.api.exceptions.RoomNotAvailableException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.BookingElement;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.BookingRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.BookingResponse;
-import com.hariansyah.bookyourrooms.api.models.entitysearch.BookingSearch;
-import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
-import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
+import com.hariansyah.bookyourrooms.api.repositories.BookingRepository;
+import com.hariansyah.bookyourrooms.api.services.AccountService;
 import com.hariansyah.bookyourrooms.api.services.BookingService;
-import com.hariansyah.bookyourrooms.api.services.FileService;
+import com.hariansyah.bookyourrooms.api.services.CustomerIdentityService;
 import com.hariansyah.bookyourrooms.api.services.RoomService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityExistsException;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.hariansyah.bookyourrooms.api.enums.StatusEnum.CANCELLED;
 import static com.hariansyah.bookyourrooms.api.enums.StatusEnum.CHECKED_IN;
@@ -39,10 +32,19 @@ public class BookingController {
     private BookingService service;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private RoomService roomService;
 
     @Autowired
-    private RoomService roomService;
+    private AccountService accountService;
+
+    @Autowired
+    private CustomerIdentityService customerIdentityService;
+
+    @Autowired
+    private BookingRepository repository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping("/{id}")
     public ResponseMessage<BookingResponse> findById(
@@ -60,20 +62,30 @@ public class BookingController {
     public ResponseMessage<BookingResponse> book(
             @RequestBody @Valid BookingRequest model
     ) {
-        Booking entity = modelMapper.map(model, Booking.class);
-
         Room room = roomService.findById(model.getRoomId());
-
         if (room == null) {
             throw new ForeignKeyNotFoundException();
         }
 
-        entity.setRoom(room);
+        Booking entity = modelMapper.map(model, Booking.class);
+        LocalDateTime checkIn = model.getCheckInDate().atTime(room.getHotel().getCheckInTime());
+        LocalDateTime checkOut = model.getCheckOutDate().atTime(room.getHotel().getCheckOutTime());
+        entity.setCheckInDate(checkIn);
+        entity.setCheckOutDate(checkOut);
 
-        entity = service.save(entity);
+        List<Booking> checkRoom = repository.findNumberOfBooked(checkIn, checkOut, room.getId());
 
-        BookingResponse data = modelMapper.map(entity, BookingResponse.class);
-        return ResponseMessage.success(data);
+        checkRoom.stream().forEach(e -> System.out.println(e.toString()));
+
+        if (checkRoom.size() < room.getNumberOfRoom()) {
+            entity.setRoom(room);
+
+            entity = service.save(entity);
+
+            BookingResponse data = modelMapper.map(entity, BookingResponse.class);
+            return ResponseMessage.success(data);
+        }
+        throw new RoomNotAvailableException();
     }
 
     @PutMapping("/{id}/cancel")

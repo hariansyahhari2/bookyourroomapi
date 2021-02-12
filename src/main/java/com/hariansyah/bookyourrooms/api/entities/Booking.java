@@ -15,9 +15,6 @@ public class Booking extends AbstractEntity<Integer> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
-    private String name;
-
     @Column(name = "check_in_date")
     private LocalDateTime checkInDate;
 
@@ -54,14 +51,6 @@ public class Booking extends AbstractEntity<Integer> {
     @Override
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public LocalDateTime getCheckInDate() {

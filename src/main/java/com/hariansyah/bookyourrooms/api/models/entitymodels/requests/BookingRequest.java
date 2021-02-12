@@ -2,17 +2,15 @@ package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
 import com.hariansyah.bookyourrooms.api.enums.StatusEnum;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class BookingRequest {
 
     private Integer id;
 
-    private String name;
+    private LocalDate checkInDate;
 
-    private LocalDateTime checkInDate;
-
-    private LocalDateTime checkOutDate;
+    private LocalDate checkOutDate;
 
     private Integer personCount;
 
@@ -32,27 +30,19 @@ public class BookingRequest {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDateTime getCheckInDate() {
+    public LocalDate getCheckInDate() {
         return checkInDate;
     }
 
-    public void setCheckInDate(LocalDateTime checkInDate) {
+    public void setCheckInDate(LocalDate checkInDate) {
         this.checkInDate = checkInDate;
     }
 
-    public LocalDateTime getCheckOutDate() {
+    public LocalDate getCheckOutDate() {
         return checkOutDate;
     }
 
-    public void setCheckOutDate(LocalDateTime checkOutDate) {
+    public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
 

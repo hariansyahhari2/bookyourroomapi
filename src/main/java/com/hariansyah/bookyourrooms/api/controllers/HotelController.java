@@ -1,20 +1,19 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
 import com.hariansyah.bookyourrooms.api.entities.Company;
-import com.hariansyah.bookyourrooms.api.entities.City;
+import com.hariansyah.bookyourrooms.api.entities.Hotel;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.CompanyElement;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CompanyRequest;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CityResponse;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CompanyResponse;
-import com.hariansyah.bookyourrooms.api.models.entitysearch.CompanySearch;
+import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.HotelElement;
+import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.HotelRequest;
+import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.HotelResponse;
+import com.hariansyah.bookyourrooms.api.models.entitysearch.HotelSearch;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
 import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
 import com.hariansyah.bookyourrooms.api.services.CompanyService;
+import com.hariansyah.bookyourrooms.api.services.HotelService;
 import com.hariansyah.bookyourrooms.api.services.FileService;
-import com.hariansyah.bookyourrooms.api.services.CityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,112 +27,112 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("/company")
+@RequestMapping("/hotel")
 @RestController
-public class CompanyController {
+public class HotelController {
 
     @Autowired
-    private CompanyService service;
+    private HotelService service;
 
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
-    private CityService cityService;
+    private CompanyService companyService;
 
     @Autowired
     private FileService fileService;
 
     @GetMapping("/{id}")
-    public ResponseMessage<CompanyResponse> findById(
+    public ResponseMessage<HotelResponse> findById(
             @PathVariable Integer id
     ) {
-        Company entity = service.findById(id);
+        Hotel entity = service.findById(id);
         if(entity != null) {
-            CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);
+            HotelResponse data = modelMapper.map(entity, HotelResponse.class);
             return ResponseMessage.success(data);
         }
         throw new EntityNotFoundException();
     }
 
     @PostMapping
-    public ResponseMessage<CompanyResponse> add(
-            @RequestBody @Valid CompanyRequest model
+    public ResponseMessage<HotelResponse> add(
+            @RequestBody @Valid HotelRequest model
     ) {
-        Company entity = modelMapper.map(model, Company.class);
+        Hotel entity = modelMapper.map(model, Hotel.class);
 
-        City city = cityService.findById(model.getCityId());
+        Company company = companyService.findById(model.getCompanyId());
 
-        if (city == null) {
+        if (company == null) {
             throw new ForeignKeyNotFoundException();
         }
 
-        entity.setCity(city);
+        entity.setCompany(company);
 
         entity = service.save(entity);
 
-        CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);
+        HotelResponse data = modelMapper.map(entity, HotelResponse.class);
         return ResponseMessage.success(data);
     }
 
     @PutMapping("/{id}")
-    public ResponseMessage<CompanyResponse> edit(
+    public ResponseMessage<HotelResponse> edit(
             @PathVariable Integer id,
-            @RequestBody @Valid CompanyRequest request
+            @RequestBody @Valid HotelRequest request
     ) {
-        Company entity = service.findById(id);
+        Hotel entity = service.findById(id);
         if(entity == null) {
             throw new EntityNotFoundException();
         }
 
-        City city = cityService.findById(request.getCityId());
-        entity.setCity(city);
+        Company company = companyService.findById(request.getCompanyId());
+        entity.setCompany(company);
 
         modelMapper.map(request, entity);
         entity = service.save(entity);
 
-        CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);
+        HotelResponse data = modelMapper.map(entity, HotelResponse.class);
         return ResponseMessage.success(data);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseMessage<CompanyResponse> delete(
+    public ResponseMessage<HotelResponse> delete(
             @PathVariable Integer id
     ) {
-        Company entity = service.removeById(id);
+        Hotel entity = service.removeById(id);
         if (entity == null) {
             throw new EntityNotFoundException();
         }
 
-        CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);
+        HotelResponse data = modelMapper.map(entity, HotelResponse.class);
         return ResponseMessage.success(data);
     }
 
     @GetMapping("/all")
-    public ResponseMessage<List<CompanyResponse>> findAll() {
-        List<Company> entities = service.findAll();
-        List<CompanyResponse> data = entities.stream()
-                .map(e -> modelMapper.map(e, CompanyResponse.class))
+    public ResponseMessage<List<HotelResponse>> findAll() {
+        List<Hotel> entities = service.findAll();
+        List<HotelResponse> data = entities.stream()
+                .map(e -> modelMapper.map(e, HotelResponse.class))
                 .collect(Collectors.toList());
         return ResponseMessage.success(data);
     }
 
     @GetMapping
-    public ResponseMessage<PagedList<CompanyElement>> findAll(
-            @Valid CompanySearch model
+    public ResponseMessage<PagedList<HotelElement>> findAll(
+            @Valid HotelSearch model
             ) {
-        Company search = modelMapper.map(model, Company.class);
+        Hotel search = modelMapper.map(model, Hotel.class);
 
-        Page<Company> entityPage = service.findAll(
+        Page<Hotel> entityPage = service.findAll(
                 search, model.getPage(), model.getSize(), model.getSort()
         );
-        List<Company> entities = entityPage.toList();
+        List<Hotel> entities = entityPage.toList();
 
-        List<CompanyElement> models = entities.stream()
-                .map(e -> modelMapper.map(e, CompanyElement.class))
+        List<HotelElement> models = entities.stream()
+                .map(e -> modelMapper.map(e, HotelElement.class))
                 .collect(Collectors.toList());
 
-        PagedList<CompanyElement> data = new PagedList<>(
+        PagedList<HotelElement> data = new PagedList<>(
                 models,
                 entityPage.getNumber(),
                 entityPage.getSize(),
@@ -148,7 +147,7 @@ public class CompanyController {
             @PathVariable Integer id,
             ImageUploadRequest model
     ) throws IOException {
-        Company entity = service.findById(id);
+        Hotel entity = service.findById(id);
         if (entity == null) {
             throw new EntityExistsException();
         }
@@ -163,7 +162,7 @@ public class CompanyController {
             @PathVariable Integer id,
             HttpServletResponse response
     ) throws IOException {
-        Company entity = service.findById(id);
+        Hotel entity = service.findById(id);
         if (entity == null) {
             throw new EntityExistsException();
         }

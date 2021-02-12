@@ -13,8 +13,6 @@ public class BookingElement {
 
     private Integer id;
 
-    private String name;
-
     private LocalDateTime checkInDate;
 
     private LocalDateTime checkOutDate;
@@ -31,14 +29,6 @@ public class BookingElement {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public LocalDateTime getCheckInDate() {

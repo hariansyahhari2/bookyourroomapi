@@ -1,7 +1,5 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
-import com.hariansyah.bookyourrooms.api.entities.Hotel;
-
 public class RoomRequest {
 
     private Integer id;
@@ -12,7 +10,7 @@ public class RoomRequest {
 
     private Double price;
 
-    private Integer capacity;
+    private Integer numberOfRoom;
 
     private Integer hotelId;
 
@@ -48,12 +46,12 @@ public class RoomRequest {
         this.price = price;
     }
 
-    public Integer getCapacity() {
-        return capacity;
+    public Integer getNumberOfRoom() {
+        return numberOfRoom;
     }
 
-    public void setCapacity(Integer capacity) {
-        this.capacity = capacity;
+    public void setNumberOfRoom(Integer numberOfRoom) {
+        this.numberOfRoom = numberOfRoom;
     }
 
     public Integer getHotelId() {

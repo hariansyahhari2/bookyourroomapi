@@ -14,8 +14,6 @@ public class BookingSearch extends PageSearch {
 
     private Integer id;
 
-    private String name;
-
     private LocalDateTime checkInDate;
 
     private LocalDateTime checkOutDate;
@@ -32,14 +30,6 @@ public class BookingSearch extends PageSearch {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public LocalDateTime getCheckInDate() {

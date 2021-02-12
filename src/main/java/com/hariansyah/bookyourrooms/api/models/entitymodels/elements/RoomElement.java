@@ -1,7 +1,5 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.elements;
 
-import com.hariansyah.bookyourrooms.api.entities.Hotel;
-
 public class RoomElement {
 
     private Integer id;
@@ -12,7 +10,7 @@ public class RoomElement {
 
     private Double price;
 
-    private Integer capacity;
+    private Integer numberOfRoom;
 
     public Integer getId() {
         return id;
@@ -46,11 +44,11 @@ public class RoomElement {
         this.price = price;
     }
 
-    public Integer getCapacity() {
-        return capacity;
+    public Integer getNumberOfRoom() {
+        return numberOfRoom;
     }
 
-    public void setCapacity(Integer capacity) {
-        this.capacity = capacity;
+    public void setNumberOfRoom(Integer numberOfRoom) {
+        this.numberOfRoom = numberOfRoom;
     }
 }

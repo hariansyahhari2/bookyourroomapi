@@ -2,12 +2,8 @@ package com.hariansyah.bookyourrooms.api.models.entitymodels.responses;
 
 import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.Company;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.RegionElement;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import java.sql.Time;
+import java.time.LocalTime;
 
 public class HotelResponse {
 
@@ -17,9 +13,9 @@ public class HotelResponse {
 
     private String about;
 
-    private Time checkInTime;
+    private LocalTime checkInTime;
 
-    private Time checkOutTime;
+    private LocalTime checkOutTime;
 
     private Company company;
 
@@ -49,19 +45,19 @@ public class HotelResponse {
         this.about = about;
     }
 
-    public Time getCheckInTime() {
+    public LocalTime getCheckInTime() {
         return checkInTime;
     }
 
-    public void setCheckInTime(Time checkInTime) {
+    public void setCheckInTime(LocalTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 
-    public Time getCheckOutTime() {
+    public LocalTime getCheckOutTime() {
         return checkOutTime;
     }
 
-    public void setCheckOutTime(Time checkOutTime) {
+    public void setCheckOutTime(LocalTime checkOutTime) {
         this.checkOutTime = checkOutTime;
     }
 

@@ -1,9 +1,7 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
-import com.hariansyah.bookyourrooms.api.entities.City;
-import com.hariansyah.bookyourrooms.api.entities.Company;
-
 import java.sql.Time;
+import java.time.LocalTime;
 
 public class HotelRequest {
 
@@ -13,9 +11,9 @@ public class HotelRequest {
 
     private String about;
 
-    private Time checkInTime;
+    private LocalTime checkInTime;
 
-    private Time checkOutTime;
+    private LocalTime checkOutTime;
 
     private Integer companyId;
 
@@ -45,19 +43,19 @@ public class HotelRequest {
         this.about = about;
     }
 
-    public Time getCheckInTime() {
+    public LocalTime getCheckInTime() {
         return checkInTime;
     }
 
-    public void setCheckInTime(Time checkInTime) {
+    public void setCheckInTime(LocalTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 
-    public Time getCheckOutTime() {
+    public LocalTime getCheckOutTime() {
         return checkOutTime;
     }
 
-    public void setCheckOutTime(Time checkOutTime) {
+    public void setCheckOutTime(LocalTime checkOutTime) {
         this.checkOutTime = checkOutTime;
     }
 

@@ -2,6 +2,7 @@ package com.hariansyah.bookyourrooms.api.entities;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.time.LocalTime;
 
 @Table
 @Entity(name = "hotel")
@@ -18,10 +19,10 @@ public class Hotel extends AbstractEntity<Integer> {
     private String about;
 
     @Column
-    private Time checkInTime;
+    private LocalTime checkInTime;
 
     @Column
-    private Time checkOutTime;
+    private LocalTime checkOutTime;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
@@ -57,19 +58,19 @@ public class Hotel extends AbstractEntity<Integer> {
         this.about = about;
     }
 
-    public Time getCheckInTime() {
+    public LocalTime getCheckInTime() {
         return checkInTime;
     }
 
-    public void setCheckInTime(Time checkInTime) {
+    public void setCheckInTime(LocalTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 
-    public Time getCheckOutTime() {
+    public LocalTime getCheckOutTime() {
         return checkOutTime;
     }
 
-    public void setCheckOutTime(Time checkOutTime) {
+    public void setCheckOutTime(LocalTime checkOutTime) {
         this.checkOutTime = checkOutTime;
     }
 
