@@ -5,7 +5,7 @@ import com.hariansyah.bookyourrooms.api.models.pagination.PageSearch;
 
 public class CustomerIdentitySearch extends PageSearch {
 
-    private IdentityCategoryEnum identity_category;
+    private IdentityCategoryEnum identityCategory;
 
     private String identificationNumber;
 
@@ -15,12 +15,12 @@ public class CustomerIdentitySearch extends PageSearch {
 
     private String address;
 
-    public IdentityCategoryEnum getIdentity_category() {
-        return identity_category;
+    public IdentityCategoryEnum getIdentityCategory() {
+        return identityCategory;
     }
 
-    public void setIdentity_category(IdentityCategoryEnum identity_category) {
-        this.identity_category = identity_category;
+    public void setIdentityCategory(IdentityCategoryEnum identityCategory) {
+        this.identityCategory = identityCategory;
     }
 
     public String getIdentificationNumber() {

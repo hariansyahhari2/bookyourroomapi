@@ -1,13 +1,12 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
 import com.hariansyah.bookyourrooms.api.entities.Company;
-import com.hariansyah.bookyourrooms.api.entities.PersonInCharge;
+import com.hariansyah.bookyourrooms.api.entities.ContactPerson;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.PersonInChargeElement;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.PersonInChargeRequest;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CityResponse;
+import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.ContactPersonElement;
+import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.ContactPersonRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.PersonInChargeResponse;
 import com.hariansyah.bookyourrooms.api.models.entitysearch.PersonInChargeSearch;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
@@ -48,7 +47,7 @@ public class PersonInChargeController {
     public ResponseMessage<PersonInChargeResponse> findById(
             @PathVariable Integer id
     ) {
-        PersonInCharge entity = service.findById(id);
+        ContactPerson entity = service.findById(id);
         System.out.println("Found" + entity);
         if(entity != null) {
             PersonInChargeResponse data = modelMapper.map(entity, PersonInChargeResponse.class);
@@ -59,9 +58,9 @@ public class PersonInChargeController {
 
     @PostMapping
     public ResponseMessage<PersonInChargeResponse> add(
-            @RequestBody @Valid PersonInChargeRequest model
+            @RequestBody @Valid ContactPersonRequest model
     ) {
-        PersonInCharge entity = modelMapper.map(model, PersonInCharge.class);
+        ContactPerson entity = modelMapper.map(model, ContactPerson.class);
 
         Company company = companyService.findById(model.getCompanyId());
 
@@ -80,9 +79,9 @@ public class PersonInChargeController {
     @PutMapping("/{id}")
     public ResponseMessage<PersonInChargeResponse> edit(
             @PathVariable Integer id,
-            @RequestBody @Valid PersonInChargeRequest request
+            @RequestBody @Valid ContactPersonRequest request
     ) {
-        PersonInCharge entity = service.findById(id);
+        ContactPerson entity = service.findById(id);
         if(entity == null) {
             throw new EntityNotFoundException();
         }
@@ -101,7 +100,7 @@ public class PersonInChargeController {
     public ResponseMessage<PersonInChargeResponse> delete(
             @PathVariable Integer id
     ) {
-        PersonInCharge entity = service.removeById(id);
+        ContactPerson entity = service.removeById(id);
         if (entity == null) {
             throw new EntityNotFoundException();
         }
@@ -112,7 +111,7 @@ public class PersonInChargeController {
 
     @GetMapping("/all")
     public ResponseMessage<List<PersonInChargeResponse>> findAll() {
-        List<PersonInCharge> entities = service.findAll();
+        List<ContactPerson> entities = service.findAll();
         List<PersonInChargeResponse> data = entities.stream()
                 .map(e -> modelMapper.map(e, PersonInChargeResponse.class))
                 .collect(Collectors.toList());
@@ -120,21 +119,21 @@ public class PersonInChargeController {
     }
 
     @GetMapping
-    public ResponseMessage<PagedList<PersonInChargeElement>> findAll(
+    public ResponseMessage<PagedList<ContactPersonElement>> findAll(
             @Valid PersonInChargeSearch model
             ) {
-        PersonInCharge search = modelMapper.map(model, PersonInCharge.class);
+        ContactPerson search = modelMapper.map(model, ContactPerson.class);
 
-        Page<PersonInCharge> entityPage = service.findAll(
+        Page<ContactPerson> entityPage = service.findAll(
                 search, model.getPage(), model.getSize(), model.getSort()
         );
-        List<PersonInCharge> entities = entityPage.toList();
+        List<ContactPerson> entities = entityPage.toList();
 
-        List<PersonInChargeElement> models = entities.stream()
-                .map(e -> modelMapper.map(e, PersonInChargeElement.class))
+        List<ContactPersonElement> models = entities.stream()
+                .map(e -> modelMapper.map(e, ContactPersonElement.class))
                 .collect(Collectors.toList());
 
-        PagedList<PersonInChargeElement> data = new PagedList<>(
+        PagedList<ContactPersonElement> data = new PagedList<>(
                 models,
                 entityPage.getNumber(),
                 entityPage.getSize(),
@@ -149,7 +148,7 @@ public class PersonInChargeController {
             @PathVariable Integer id,
             ImageUploadRequest model
     ) throws IOException {
-        PersonInCharge entity = service.findById(id);
+        ContactPerson entity = service.findById(id);
         if (entity == null) {
             throw new EntityExistsException();
         }
@@ -164,7 +163,7 @@ public class PersonInChargeController {
             @PathVariable Integer id,
             HttpServletResponse response
     ) throws IOException {
-        PersonInCharge entity = service.findById(id);
+        ContactPerson entity = service.findById(id);
         if (entity == null) {
             throw new EntityExistsException();
         }

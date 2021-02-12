@@ -10,8 +10,6 @@ public class AccountRequest {
 
     private String password;
 
-    private Integer customerIdentityId;
-
     public Integer getId() {
         return id;
     }
@@ -42,13 +40,5 @@ public class AccountRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Integer getCustomerIdentityId() {
-        return customerIdentityId;
-    }
-
-    public void setCustomerIdentityId(Integer customerIdentityId) {
-        this.customerIdentityId = customerIdentityId;
     }
 }

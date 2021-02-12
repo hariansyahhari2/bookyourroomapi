@@ -2,7 +2,7 @@ package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
 import com.hariansyah.bookyourrooms.api.enums.IdentityCategoryEnum;
 
-public class CustomerIdentityRequest {
+public class CustomerIdentityWithAccountRequest {
 
     private Integer id;
 
@@ -15,6 +15,8 @@ public class CustomerIdentityRequest {
     private String lastName;
 
     private String address;
+
+    private AccountRequest account;
 
     public Integer getId() {
         return id;
@@ -62,5 +64,13 @@ public class CustomerIdentityRequest {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public AccountRequest getAccount() {
+        return account;
+    }
+
+    public void setAccount(AccountRequest account) {
+        this.account = account;
     }
 }

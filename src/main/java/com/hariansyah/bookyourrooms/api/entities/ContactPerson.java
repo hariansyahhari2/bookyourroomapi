@@ -1,21 +1,37 @@
-package com.hariansyah.bookyourrooms.api.models.entitymodels.elements;
+package com.hariansyah.bookyourrooms.api.entities;
 
-public class PersonInChargeElement {
+import javax.persistence.*;
 
+@Table
+@Entity(name = "contact_person")
+public class ContactPerson extends AbstractEntity<Integer> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "first_name")
     private String firstName;
 
+    @Column(name = "last_name")
     private String lastName;
 
+    @Column
     private String position;
 
+    @Column(name = "contact_number")
     private String contactNumber;
 
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @Override
     public Integer getId() {
         return id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
@@ -50,5 +66,13 @@ public class PersonInChargeElement {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }

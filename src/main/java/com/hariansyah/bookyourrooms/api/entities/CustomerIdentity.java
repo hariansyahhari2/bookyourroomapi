@@ -13,8 +13,8 @@ public class CustomerIdentity extends AbstractEntity<Integer> {
     private Integer id;
 
     @Enumerated
-    @Column(unique = true)
-    private IdentityCategoryEnum identity_category;
+    @Column
+    private IdentityCategoryEnum identityCategory;
 
     @Column(name = "identification_number")
     private String identificationNumber;
@@ -28,6 +28,10 @@ public class CustomerIdentity extends AbstractEntity<Integer> {
     @Column(name = "address")
     private String address;
 
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
     @Override
     public Integer getId() {
         return id;
@@ -38,12 +42,12 @@ public class CustomerIdentity extends AbstractEntity<Integer> {
         this.id = id;
     }
 
-    public IdentityCategoryEnum getIdentity_category() {
-        return identity_category;
+    public IdentityCategoryEnum getIdentityCategory() {
+        return identityCategory;
     }
 
-    public void setIdentity_category(IdentityCategoryEnum identity_category) {
-        this.identity_category = identity_category;
+    public void setIdentityCategory(IdentityCategoryEnum identityCategory) {
+        this.identityCategory = identityCategory;
     }
 
     public String getIdentificationNumber() {
@@ -76,5 +80,13 @@ public class CustomerIdentity extends AbstractEntity<Integer> {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

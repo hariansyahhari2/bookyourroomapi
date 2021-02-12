@@ -6,7 +6,7 @@ public class CustomerIdentityResponse {
 
     private Integer id;
 
-    private IdentityCategoryEnum identity_category;
+    private IdentityCategoryEnum identityCategory;
 
     private String identificationNumber;
 
@@ -16,6 +16,8 @@ public class CustomerIdentityResponse {
 
     private String address;
 
+    private AccountResponse account;
+
     public Integer getId() {
         return id;
     }
@@ -24,12 +26,12 @@ public class CustomerIdentityResponse {
         this.id = id;
     }
 
-    public IdentityCategoryEnum getIdentity_category() {
-        return identity_category;
+    public IdentityCategoryEnum getIdentityCategory() {
+        return identityCategory;
     }
 
-    public void setIdentity_category(IdentityCategoryEnum identity_category) {
-        this.identity_category = identity_category;
+    public void setIdentityCategory(IdentityCategoryEnum identityCategory) {
+        this.identityCategory = identityCategory;
     }
 
     public String getIdentificationNumber() {
@@ -62,5 +64,13 @@ public class CustomerIdentityResponse {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public AccountResponse getAccount() {
+        return account;
+    }
+
+    public void setAccount(AccountResponse account) {
+        this.account = account;
     }
 }

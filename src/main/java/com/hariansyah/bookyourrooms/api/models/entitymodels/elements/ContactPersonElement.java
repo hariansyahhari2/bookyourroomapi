@@ -1,6 +1,6 @@
-package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
+package com.hariansyah.bookyourrooms.api.models.entitymodels.elements;
 
-public class PersonInChargeRequest {
+public class ContactPersonElement {
 
     private Integer id;
 
@@ -11,8 +11,6 @@ public class PersonInChargeRequest {
     private String position;
 
     private String contactNumber;
-
-    private Integer companyId;
 
     public Integer getId() {
         return id;
@@ -52,13 +50,5 @@ public class PersonInChargeRequest {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
-    }
-
-    public Integer getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
     }
 }

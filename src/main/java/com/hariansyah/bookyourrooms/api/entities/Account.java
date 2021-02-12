@@ -1,7 +1,5 @@
 package com.hariansyah.bookyourrooms.api.entities;
 
-import com.hariansyah.bookyourrooms.api.enums.IdentityCategoryEnum;
-
 import javax.persistence.*;
 
 @Table
@@ -29,10 +27,6 @@ public class Account extends AbstractEntity<Integer> {
 
     @Column
     private String password;
-
-    @OneToOne
-    @JoinColumn(name = "customer_identity_id")
-    private CustomerIdentity customerIdentity;
 
     @Override
     public Integer getId() {
@@ -66,13 +60,5 @@ public class Account extends AbstractEntity<Integer> {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public CustomerIdentity getCustomerIdentity() {
-        return customerIdentity;
-    }
-
-    public void setCustomerIdentity(CustomerIdentity customerIdentity) {
-        this.customerIdentity = customerIdentity;
     }
 }

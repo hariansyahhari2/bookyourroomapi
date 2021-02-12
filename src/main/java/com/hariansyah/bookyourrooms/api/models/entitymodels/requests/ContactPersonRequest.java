@@ -1,37 +1,23 @@
-package com.hariansyah.bookyourrooms.api.entities;
+package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
-import javax.persistence.*;
+public class ContactPersonRequest {
 
-@Table
-@Entity(name = "person_in_charge")
-public class PersonInCharge extends AbstractEntity<Integer> {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
     private String lastName;
 
-    @Column
     private String position;
 
-    @Column(name = "contact_number")
     private String contactNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    private Integer companyId;
 
-    @Override
     public Integer getId() {
         return id;
     }
 
-    @Override
     public void setId(Integer id) {
         this.id = id;
     }
@@ -68,11 +54,11 @@ public class PersonInCharge extends AbstractEntity<Integer> {
         this.contactNumber = contactNumber;
     }
 
-    public Company getCompany() {
-        return company;
+    public Integer getCompanyId() {
+        return companyId;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 }
