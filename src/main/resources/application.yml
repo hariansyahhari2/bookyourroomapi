@@ -19,8 +19,6 @@ spring:
     multipart:
       max-file-size: 300KB
       max-request-size: 300KB
-jwt:
-  secret: inipasswordhash
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html #Default path
+    path: /swagger-ui.html
