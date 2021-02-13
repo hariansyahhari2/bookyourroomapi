@@ -2,13 +2,10 @@ package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 
 import com.hariansyah.bookyourrooms.api.enums.StatusEnum;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class BookingRequest {
-
-    private Integer id;
 
     @NotNull
     private LocalDate checkInDate;
@@ -27,16 +24,6 @@ public class BookingRequest {
 
     @NotNull
     private Long roomCount;
-
-    private StatusEnum status;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public LocalDate getCheckInDate() {
         return checkInDate;
@@ -84,13 +71,5 @@ public class BookingRequest {
 
     public void setRoomCount(Long roomCount) {
         this.roomCount = roomCount;
-    }
-
-    public StatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusEnum status) {
-        this.status = status;
     }
 }

@@ -7,8 +7,6 @@ import javax.validation.constraints.NotNull;
 
 public class CustomerIdentityWithAccountRequest {
 
-    private Integer id;
-
     @NotNull
     private IdentityCategoryEnum identityCategory;
 
@@ -26,14 +24,6 @@ public class CustomerIdentityWithAccountRequest {
 
     @NotNull
     private AccountRequest account;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public IdentityCategoryEnum getIdentityCategory() {
         return identityCategory;

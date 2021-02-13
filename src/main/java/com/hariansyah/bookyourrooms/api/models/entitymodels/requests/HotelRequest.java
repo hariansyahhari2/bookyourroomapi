@@ -5,8 +5,6 @@ import javax.validation.constraints.NotNull;
 
 public class HotelRequest {
 
-    private Integer id;
-
     @NotBlank
     private String name;
 
@@ -18,14 +16,6 @@ public class HotelRequest {
 
     @NotNull
     private Integer cityId;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

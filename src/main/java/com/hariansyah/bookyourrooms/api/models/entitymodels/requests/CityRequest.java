@@ -5,21 +5,11 @@ import javax.validation.constraints.NotNull;
 
 public class CityRequest {
 
-    private Integer id;
-
     @NotBlank
     private String name;
 
     @NotNull
     private Integer regionId;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

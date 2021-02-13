@@ -4,8 +4,6 @@ import javax.validation.constraints.NotBlank;
 
 public class AccountRequest {
 
-    private Integer id;
-
     @NotBlank
     private String username;
 
@@ -14,14 +12,6 @@ public class AccountRequest {
 
     @NotBlank
     private String password;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
