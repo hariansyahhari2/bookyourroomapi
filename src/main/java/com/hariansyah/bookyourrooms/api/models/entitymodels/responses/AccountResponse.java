@@ -1,5 +1,7 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.responses;
 
+import com.hariansyah.bookyourrooms.api.enums.RoleEnum;
+
 public class AccountResponse {
 
     private Integer id;
@@ -7,6 +9,8 @@ public class AccountResponse {
     private String username;
 
     private String email;
+
+    private RoleEnum role;
 
     public Integer getId() {
         return id;
@@ -30,5 +34,13 @@ public class AccountResponse {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public RoleEnum getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEnum role) {
+        this.role = role;
     }
 }

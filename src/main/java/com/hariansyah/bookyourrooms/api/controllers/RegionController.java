@@ -1,5 +1,6 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
+import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.Region;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
@@ -8,15 +9,20 @@ import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.RegionReque
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.RegionResponse;
 import com.hariansyah.bookyourrooms.api.models.entitysearch.RegionSearch;
 import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
+import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
+import com.hariansyah.bookyourrooms.api.services.FileService;
 import com.hariansyah.bookyourrooms.api.services.RegionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleAdmin;
 
 @RequestMapping("/region")
 @RestController
@@ -27,6 +33,16 @@ public class RegionController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private JwtToken jwtTokenUtil;
+
+    private void validateAdmin(HttpServletRequest request) {
+        validateRoleAdmin(request, jwtTokenUtil, accountRepository);
+    }
 
     @GetMapping("/{id}")
     public ResponseMessage<RegionResponse> findById(
@@ -42,8 +58,10 @@ public class RegionController {
 
     @PostMapping
     public ResponseMessage<RegionResponse> add(
-            @RequestBody @Valid RegionRequest model
+            @RequestBody @Valid RegionRequest model,
+            HttpServletRequest request
     ) {
+        validateAdmin(request);
         Region entity = modelMapper.map(model, Region.class);
         entity = service.save(entity);
 
@@ -54,8 +72,10 @@ public class RegionController {
     @PutMapping("{id}")
     public ResponseMessage<RegionResponse> edit(
             @PathVariable Integer id,
-            @RequestBody @Valid RegionRequest model
+            @RequestBody @Valid RegionRequest model,
+            HttpServletRequest request
     ) {
+        validateAdmin(request);
         Region entity = service.findById(id);
         if(entity == null) {
             throw new EntityNotFoundException();
@@ -69,8 +89,10 @@ public class RegionController {
 
     @DeleteMapping("/{id}")
     public ResponseMessage<RegionResponse> delete(
-            @PathVariable Integer id
+            @PathVariable Integer id,
+            HttpServletRequest request
     ) {
+        validateAdmin(request);
         Region entity = service.removeById(id);
         if (entity == null) {
             throw new EntityNotFoundException();

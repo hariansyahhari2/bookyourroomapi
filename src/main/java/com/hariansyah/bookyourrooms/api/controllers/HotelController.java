@@ -1,5 +1,6 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
+import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.entities.Hotel;
@@ -12,6 +13,7 @@ import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.HotelRespo
 import com.hariansyah.bookyourrooms.api.models.entitysearch.HotelSearch;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
 import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
+import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
 import com.hariansyah.bookyourrooms.api.services.CityService;
 import com.hariansyah.bookyourrooms.api.services.CompanyService;
 import com.hariansyah.bookyourrooms.api.services.HotelService;
@@ -23,11 +25,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleHotelManager;
 
 @RequestMapping("/hotel")
 @RestController
@@ -46,7 +51,17 @@ public class HotelController {
     private CityService cityService;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private JwtToken jwtTokenUtil;
+
+    @Autowired
     private FileService fileService;
+
+    private void validateManager(HttpServletRequest request) {
+        validateRoleHotelManager(request, jwtTokenUtil, accountRepository);
+    }
 
     @GetMapping("/{id}")
     public ResponseMessage<HotelResponse> findById(
@@ -62,8 +77,10 @@ public class HotelController {
 
     @PostMapping
     public ResponseMessage<HotelResponse> add(
-            @RequestBody @Valid HotelRequest model
+            @RequestBody @Valid HotelRequest model,
+            HttpServletRequest request
     ) {
+        validateManager(request);
         Hotel entity = modelMapper.map(model, Hotel.class);
 
         Company company = companyService.findById(model.getCompanyId());
@@ -85,15 +102,17 @@ public class HotelController {
     @PutMapping("/{id}")
     public ResponseMessage<HotelResponse> edit(
             @PathVariable Integer id,
-            @RequestBody @Valid HotelRequest request
+            @RequestBody @Valid HotelRequest model,
+            HttpServletRequest request
     ) {
+        validateManager(request);
         Hotel entity = service.findById(id);
         if(entity == null) {
             throw new EntityNotFoundException();
         }
 
-        Company company = companyService.findById(request.getCompanyId());
-        City city = cityService.findById(request.getCityId());
+        Company company = companyService.findById(model.getCompanyId());
+        City city = cityService.findById(model.getCityId());
         if (company == null || city == null) {
             throw new ForeignKeyNotFoundException();
         }
@@ -109,8 +128,10 @@ public class HotelController {
 
     @DeleteMapping("/{id}")
     public ResponseMessage<HotelResponse> delete(
-            @PathVariable Integer id
+            @PathVariable Integer id,
+            HttpServletRequest request
     ) {
+        validateManager(request);
         Hotel entity = service.removeById(id);
         if (entity == null) {
             throw new EntityNotFoundException();
@@ -157,8 +178,10 @@ public class HotelController {
     @PostMapping(value = "/upload/{id}", consumes = {"multipart/form-data"})
     public ResponseMessage<Object> upload(
             @PathVariable Integer id,
-            ImageUploadRequest model
+            ImageUploadRequest model,
+            HttpServletRequest request
     ) throws IOException {
+        validateManager(request);
         Hotel entity = service.findById(id);
         if (entity == null) {
             throw new EntityExistsException();

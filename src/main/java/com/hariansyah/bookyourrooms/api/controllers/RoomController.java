@@ -1,5 +1,6 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
+import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.Hotel;
 import com.hariansyah.bookyourrooms.api.entities.Room;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
@@ -11,6 +12,7 @@ import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.RoomRespon
 import com.hariansyah.bookyourrooms.api.models.entitysearch.RoomSearch;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
 import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
+import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
 import com.hariansyah.bookyourrooms.api.services.HotelService;
 import com.hariansyah.bookyourrooms.api.services.RoomService;
 import com.hariansyah.bookyourrooms.api.services.FileService;
@@ -21,11 +23,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleEmployee;
+import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleHotelManager;
 
 @RequestMapping("/room")
 @RestController
@@ -41,7 +47,17 @@ public class RoomController {
     private HotelService hotelService;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private JwtToken jwtTokenUtil;
+
+    @Autowired
     private FileService fileService;
+
+    private void validateManager(HttpServletRequest request) {
+        validateRoleHotelManager(request, jwtTokenUtil, accountRepository);
+    }
 
     @GetMapping("/{id}")
     public ResponseMessage<RoomResponse> findById(
@@ -57,8 +73,11 @@ public class RoomController {
 
     @PostMapping
     public ResponseMessage<RoomResponse> add(
-            @RequestBody @Valid RoomRequest model
+            @RequestBody @Valid RoomRequest model,
+            HttpServletRequest request
     ) {
+        validateManager(request);
+
         Room entity = modelMapper.map(model, Room.class);
 
         Hotel hotel = hotelService.findById(model.getHotelId());
@@ -78,14 +97,17 @@ public class RoomController {
     @PutMapping("/{id}")
     public ResponseMessage<RoomResponse> edit(
             @PathVariable Integer id,
-            @RequestBody @Valid RoomRequest request
+            @RequestBody @Valid RoomRequest model,
+            HttpServletRequest request
     ) {
+        validateManager(request);
+
         Room entity = service.findById(id);
         if(entity == null) {
             throw new EntityNotFoundException();
         }
 
-        Hotel hotel = hotelService.findById(request.getHotelId());
+        Hotel hotel = hotelService.findById(model.getHotelId());
         entity.setHotel(hotel);
 
         entity = service.save(entity);
@@ -96,8 +118,11 @@ public class RoomController {
 
     @DeleteMapping("/{id}")
     public ResponseMessage<RoomResponse> delete(
-            @PathVariable Integer id
+            @PathVariable Integer id,
+            HttpServletRequest request
     ) {
+        validateManager(request);
+
         Room entity = service.removeById(id);
         if (entity == null) {
             throw new EntityNotFoundException();
@@ -144,8 +169,11 @@ public class RoomController {
     @PostMapping(value = "/upload/{id}", consumes = {"multipart/form-data"})
     public ResponseMessage<Object> upload(
             @PathVariable Integer id,
-            ImageUploadRequest model
+            ImageUploadRequest model,
+            HttpServletRequest request
     ) throws IOException {
+        validateManager(request);
+
         Room entity = service.findById(id);
         if (entity == null) {
             throw new EntityExistsException();

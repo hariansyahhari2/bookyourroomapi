@@ -1,5 +1,6 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
+import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.ContactPerson;
 import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
@@ -11,6 +12,7 @@ import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.ContactPer
 import com.hariansyah.bookyourrooms.api.models.entitysearch.ContactPersonSearch;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
 import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
+import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
 import com.hariansyah.bookyourrooms.api.services.ContactPersonService;
 import com.hariansyah.bookyourrooms.api.services.FileService;
 import com.hariansyah.bookyourrooms.api.services.CompanyService;
@@ -21,11 +23,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleAdmin;
+import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleEmployee;
 
 @RequestMapping("/contact-person")
 @RestController
@@ -41,7 +47,17 @@ public class ContactPersonController {
     private CompanyService companyService;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private JwtToken jwtTokenUtil;
+
+    @Autowired
     private FileService fileService;
+
+    private void validateAdmin(HttpServletRequest request) {
+        validateRoleAdmin(request, jwtTokenUtil, accountRepository);
+    }
 
     @GetMapping("/{id}")
     public ResponseMessage<ContactPersonResponse> findById(
@@ -57,8 +73,10 @@ public class ContactPersonController {
 
     @PostMapping
     public ResponseMessage<ContactPersonResponse> add(
-            @RequestBody @Valid ContactPersonRequest model
+            @RequestBody @Valid ContactPersonRequest model,
+            HttpServletRequest request
     ) {
+        validateAdmin(request);
         ContactPerson entity = modelMapper.map(model, ContactPerson.class);
 
         Company customerIdentity = companyService.findById(model.getCompanyId());
@@ -78,14 +96,16 @@ public class ContactPersonController {
     @PutMapping("/{id}")
     public ResponseMessage<ContactPersonResponse> edit(
             @PathVariable Integer id,
-            @RequestBody @Valid ContactPersonRequest request
+            @RequestBody @Valid ContactPersonRequest model,
+            HttpServletRequest request
     ) {
+        validateAdmin(request);
         ContactPerson entity = service.findById(id);
         if(entity == null) {
             throw new EntityNotFoundException();
         }
 
-        Company customerIdentity = companyService.findById(request.getCompanyId());
+        Company customerIdentity = companyService.findById(model.getCompanyId());
         entity.setCompany(customerIdentity);
 
         entity = service.save(entity);
@@ -96,8 +116,10 @@ public class ContactPersonController {
 
     @DeleteMapping("/{id}")
     public ResponseMessage<ContactPersonResponse> delete(
-            @PathVariable Integer id
+            @PathVariable Integer id,
+            HttpServletRequest request
     ) {
+        validateAdmin(request);
         ContactPerson entity = service.removeById(id);
         if (entity == null) {
             throw new EntityNotFoundException();

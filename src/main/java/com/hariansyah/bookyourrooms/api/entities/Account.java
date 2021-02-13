@@ -1,20 +1,12 @@
 package com.hariansyah.bookyourrooms.api.entities;
 
+import com.hariansyah.bookyourrooms.api.enums.RoleEnum;
+
 import javax.persistence.*;
 
 @Table
 @Entity(name = "account")
 public class Account extends AbstractEntity<Integer> {
-
-    public Account() {
-    }
-
-    public Account(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,6 +19,10 @@ public class Account extends AbstractEntity<Integer> {
 
     @Column
     private String password;
+
+    @Enumerated
+    @Column
+    private RoleEnum role;
 
     @Override
     public Integer getId() {
@@ -60,5 +56,13 @@ public class Account extends AbstractEntity<Integer> {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public RoleEnum getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEnum role) {
+        this.role = role;
     }
 }

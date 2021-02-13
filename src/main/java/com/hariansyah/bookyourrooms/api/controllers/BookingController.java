@@ -47,10 +47,10 @@ public class BookingController {
     private AccountRepository accountRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private JwtToken jwtTokenUtil;
 
     @Autowired
-    private JwtToken jwtTokenUtil;
+    private ModelMapper modelMapper;
 
     @GetMapping("/{id}")
     public ResponseMessage<BookingResponse> findById(
@@ -153,7 +153,6 @@ public class BookingController {
         }
         throw new ForeignKeyNotFoundException();
     }
-
 
     @GetMapping("/{id}/check-in")
     public ResponseMessage<BookingResponse> checkIn(

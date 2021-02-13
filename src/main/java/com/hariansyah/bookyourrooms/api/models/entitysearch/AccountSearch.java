@@ -1,6 +1,7 @@
 package com.hariansyah.bookyourrooms.api.models.entitysearch;
 
 import com.hariansyah.bookyourrooms.api.entities.CustomerIdentity;
+import com.hariansyah.bookyourrooms.api.enums.RoleEnum;
 import com.hariansyah.bookyourrooms.api.models.pagination.PageSearch;
 
 public class AccountSearch extends PageSearch {
@@ -12,6 +13,8 @@ public class AccountSearch extends PageSearch {
     private String email;
 
     private CustomerIdentity customerIdentity;
+
+    private RoleEnum role;
 
     public Integer getId() {
         return id;
@@ -43,5 +46,13 @@ public class AccountSearch extends PageSearch {
 
     public void setCustomerIdentity(CustomerIdentity customerIdentity) {
         this.customerIdentity = customerIdentity;
+    }
+
+    public RoleEnum getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEnum role) {
+        this.role = role;
     }
 }

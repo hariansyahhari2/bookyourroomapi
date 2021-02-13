@@ -1,5 +1,6 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
+import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.Region;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
@@ -11,6 +12,7 @@ import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CityRespon
 import com.hariansyah.bookyourrooms.api.models.entitysearch.CitySearch;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
 import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
+import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
 import com.hariansyah.bookyourrooms.api.services.CityService;
 import com.hariansyah.bookyourrooms.api.services.RegionService;
 import com.hariansyah.bookyourrooms.api.services.FileService;
@@ -21,11 +23,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleAdmin;
 
 @RequestMapping("/city")
 @RestController
@@ -41,7 +46,17 @@ public class CityController {
     private RegionService regionService;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private JwtToken jwtTokenUtil;
+
+    @Autowired
     private FileService fileService;
+
+    private void validateAdmin(HttpServletRequest request) {
+        validateRoleAdmin(request, jwtTokenUtil, accountRepository);
+    }
 
     @GetMapping("/{id}")
     public ResponseMessage<CityResponse> findById(
@@ -57,8 +72,10 @@ public class CityController {
 
     @PostMapping
     public ResponseMessage<CityResponse> add(
-            @RequestBody @Valid CityRequest model
+            @RequestBody @Valid CityRequest model,
+            HttpServletRequest request
     ) {
+        validateAdmin(request);
         City entity = modelMapper.map(model, City.class);
 
         Region customerIdentity = regionService.findById(model.getRegionId());
@@ -78,14 +95,16 @@ public class CityController {
     @PutMapping("/{id}")
     public ResponseMessage<CityResponse> edit(
             @PathVariable Integer id,
-            @RequestBody @Valid CityRequest request
+            @RequestBody @Valid CityRequest model,
+            HttpServletRequest request
     ) {
+        validateAdmin(request);
         City entity = service.findById(id);
         if(entity == null) {
             throw new EntityNotFoundException();
         }
 
-        Region customerIdentity = regionService.findById(request.getRegionId());
+        Region customerIdentity = regionService.findById(model.getRegionId());
         entity.setRegion(customerIdentity);
 
         entity = service.save(entity);
@@ -96,8 +115,10 @@ public class CityController {
 
     @DeleteMapping("/{id}")
     public ResponseMessage<CityResponse> delete(
-            @PathVariable Integer id
+            @PathVariable Integer id,
+            HttpServletRequest request
     ) {
+        validateAdmin(request);
         City entity = service.removeById(id);
         if (entity == null) {
             throw new EntityNotFoundException();
@@ -144,8 +165,10 @@ public class CityController {
     @PostMapping(value = "/upload/{id}", consumes = {"multipart/form-data"})
     public ResponseMessage<Object> upload(
             @PathVariable Integer id,
-            ImageUploadRequest model
+            ImageUploadRequest model,
+            HttpServletRequest request
     ) throws IOException {
+        validateAdmin(request);
         City entity = service.findById(id);
         if (entity == null) {
             throw new EntityExistsException();
