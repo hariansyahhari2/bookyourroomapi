@@ -1,14 +1,12 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
-import com.hariansyah.bookyourrooms.api.entities.Account;
-import com.hariansyah.bookyourrooms.api.entities.Booking;
-import com.hariansyah.bookyourrooms.api.entities.CustomerIdentity;
-import com.hariansyah.bookyourrooms.api.entities.Room;
+import com.hariansyah.bookyourrooms.api.entities.*;
 import com.hariansyah.bookyourrooms.api.exceptions.*;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.BookingRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.BookingResponse;
+import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CityResponse;
 import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
 import com.hariansyah.bookyourrooms.api.repositories.BookingRepository;
 import com.hariansyah.bookyourrooms.api.services.AccountService;
@@ -23,7 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.hariansyah.bookyourrooms.api.enums.RoleEnum.GUEST;
 import static com.hariansyah.bookyourrooms.api.enums.StatusEnum.*;
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -71,7 +71,7 @@ public class BookingController {
     ) {
         Long numberOfNight = DAYS.between(model.getCheckInDate(), model.getCheckOutDate());
         if (numberOfNight <= 0) {
-            throw new ForeignKeyNotFoundException();
+            throw new DateInvalidException();
         }
         Room room = roomService.findById(model.getRoomId());
         if (room == null) {
@@ -175,7 +175,8 @@ public class BookingController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
             String username = jwtTokenUtil.getUsernameFromToken(token);
-            if (!entity.getBookedBy().getUsername().equals(username)) {
+            Account account = accountRepository.findByUsername(username);
+            if (!entity.getBookedBy().getUsername().equals(username) || !account.getRole().equals(GUEST)) {
                 throw new InvalidCredentialsException();
             }
             entity.setStatus(CHECKED_IN);
@@ -184,5 +185,29 @@ public class BookingController {
             return ResponseMessage.success(data);
         }
         throw new ForeignKeyNotFoundException();
+    }
+
+    @GetMapping("/all")
+    public ResponseMessage<List<BookingResponse>> findAll(
+            HttpServletRequest request
+    ) {
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+            String username = jwtTokenUtil.getUsernameFromToken(token);
+            Account account = accountRepository.findByUsername(username);
+
+            List<Booking> entities = service.findAll();
+            if (account.getRole().equals(GUEST)) {
+                entities = entities.stream().filter(entity -> entity.getBookedBy().getUsername().equals(username))
+                        .collect(Collectors.toList());
+            }
+
+            List<BookingResponse> data = entities.stream()
+                    .map(e -> modelMapper.map(e, BookingResponse.class))
+                    .collect(Collectors.toList());
+            return ResponseMessage.success(data);
+        }
+        throw new InvalidCredentialsException();
     }
 }
