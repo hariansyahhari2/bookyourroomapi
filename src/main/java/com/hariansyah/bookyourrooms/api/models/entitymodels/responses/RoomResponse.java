@@ -18,7 +18,7 @@ public class RoomResponse {
 
     private Integer numberOfRoom;
 
-    private Hotel hotel;
+    private HotelResponse hotel;
 
     public Integer getId() {
         return id;
@@ -60,11 +60,11 @@ public class RoomResponse {
         this.numberOfRoom = numberOfRoom;
     }
 
-    public Hotel getHotel() {
+    public HotelResponse getHotel() {
         return hotel;
     }
 
-    public void setHotel(Hotel hotel) {
+    public void setHotel(HotelResponse hotel) {
         this.hotel = hotel;
     }
 }

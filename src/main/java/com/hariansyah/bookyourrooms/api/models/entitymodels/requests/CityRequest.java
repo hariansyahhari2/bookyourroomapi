@@ -13,7 +13,6 @@ public class CityRequest {
     @NotNull
     private Integer regionId;
 
-    @NotNull
     public Integer getId() {
         return id;
     }

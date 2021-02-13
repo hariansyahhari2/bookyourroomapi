@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegionImpl extends CommonServiceImpl<Region, Integer> implements RegionService {
+public class RegionServiceImpl extends CommonServiceImpl<Region, Integer> implements RegionService {
 
     @Autowired
-    protected RegionImpl(JpaRepository<Region, Integer> repository) {
+    protected RegionServiceImpl(JpaRepository<Region, Integer> repository) {
         super(repository);
     }
 }

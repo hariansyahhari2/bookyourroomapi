@@ -3,7 +3,7 @@ package com.hariansyah.bookyourrooms.api.entities;
 import com.hariansyah.bookyourrooms.api.enums.StatusEnum;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static com.hariansyah.bookyourrooms.api.enums.StatusEnum.CONFIRMED;
 
@@ -16,10 +16,10 @@ public class Booking extends AbstractEntity<Integer> {
     private Integer id;
 
     @Column(name = "check_in_date")
-    private LocalDateTime checkInDate;
+    private LocalDate checkInDate;
 
     @Column(name = "check_out_date")
-    private LocalDateTime checkOutDate;
+    private LocalDate checkOutDate;
 
     @Column(name = "person_count")
     private Integer personCount;
@@ -35,6 +35,12 @@ public class Booking extends AbstractEntity<Integer> {
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
+
+    @Column(name = "number_of_night")
+    private Long numberOfNight;
+
+    @Column(name = "room_count")
+    private Long roomCount;
 
     @Column
     private Double subTotal;
@@ -53,19 +59,19 @@ public class Booking extends AbstractEntity<Integer> {
         this.id = id;
     }
 
-    public LocalDateTime getCheckInDate() {
+    public LocalDate getCheckInDate() {
         return checkInDate;
     }
 
-    public void setCheckInDate(LocalDateTime checkInDate) {
+    public void setCheckInDate(LocalDate checkInDate) {
         this.checkInDate = checkInDate;
     }
 
-    public LocalDateTime getCheckOutDate() {
+    public LocalDate getCheckOutDate() {
         return checkOutDate;
     }
 
-    public void setCheckOutDate(LocalDateTime checkOutDate) {
+    public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
 
@@ -99,6 +105,22 @@ public class Booking extends AbstractEntity<Integer> {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public Long getNumberOfNight() {
+        return numberOfNight;
+    }
+
+    public void setNumberOfNight(Long numberOfNight) {
+        this.numberOfNight = numberOfNight;
+    }
+
+    public Long getRoomCount() {
+        return roomCount;
+    }
+
+    public void setRoomCount(Long roomCount) {
+        this.roomCount = roomCount;
     }
 
     public Double getSubTotal() {

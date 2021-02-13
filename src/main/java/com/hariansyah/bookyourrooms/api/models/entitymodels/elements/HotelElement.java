@@ -1,9 +1,5 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.elements;
 
-import com.hariansyah.bookyourrooms.api.models.pagination.PageSearch;
-
-import java.time.LocalTime;
-
 public class HotelElement {
 
     private Integer id;
@@ -11,10 +7,6 @@ public class HotelElement {
     private String name;
 
     private String about;
-
-    private LocalTime checkInTime;
-
-    private LocalTime checkOutTime;
 
     public Integer getId() {
         return id;
@@ -38,21 +30,5 @@ public class HotelElement {
 
     public void setAbout(String about) {
         this.about = about;
-    }
-
-    public LocalTime getCheckInTime() {
-        return checkInTime;
-    }
-
-    public void setCheckInTime(LocalTime checkInTime) {
-        this.checkInTime = checkInTime;
-    }
-
-    public LocalTime getCheckOutTime() {
-        return checkOutTime;
-    }
-
-    public void setCheckOutTime(LocalTime checkOutTime) {
-        this.checkOutTime = checkOutTime;
     }
 }

@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CompanyImpl extends CommonServiceImpl<Company, Integer> implements CompanyService {
+public class CompanyServiceImpl extends CommonServiceImpl<Company, Integer> implements CompanyService {
 
     @Autowired
-    protected CompanyImpl(JpaRepository<Company, Integer> repository) {
+    protected CompanyServiceImpl(JpaRepository<Company, Integer> repository) {
         super(repository);
     }
 }

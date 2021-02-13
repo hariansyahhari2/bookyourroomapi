@@ -9,7 +9,7 @@ public class CustomerIdentityWithAccountRequest {
 
     private Integer id;
 
-    @NotBlank
+    @NotNull
     private IdentityCategoryEnum identityCategory;
 
     @NotBlank

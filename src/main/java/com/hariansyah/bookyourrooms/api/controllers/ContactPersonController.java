@@ -1,7 +1,7 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
-import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.entities.ContactPerson;
+import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
@@ -11,9 +11,9 @@ import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.ContactPer
 import com.hariansyah.bookyourrooms.api.models.entitysearch.ContactPersonSearch;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
 import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
-import com.hariansyah.bookyourrooms.api.services.CompanyService;
 import com.hariansyah.bookyourrooms.api.services.ContactPersonService;
 import com.hariansyah.bookyourrooms.api.services.FileService;
+import com.hariansyah.bookyourrooms.api.services.CompanyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,9 +27,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("/person-in-charge")
+@RequestMapping("/contact-person")
 @RestController
-public class PersonInChargeController {
+public class ContactPersonController {
 
     @Autowired
     private ContactPersonService service;
@@ -48,7 +48,6 @@ public class PersonInChargeController {
             @PathVariable Integer id
     ) {
         ContactPerson entity = service.findById(id);
-        System.out.println("Found" + entity);
         if(entity != null) {
             ContactPersonResponse data = modelMapper.map(entity, ContactPersonResponse.class);
             return ResponseMessage.success(data);
@@ -62,13 +61,13 @@ public class PersonInChargeController {
     ) {
         ContactPerson entity = modelMapper.map(model, ContactPerson.class);
 
-        Company company = companyService.findById(model.getCompanyId());
+        Company customerIdentity = companyService.findById(model.getCompanyId());
 
-        if (company == null) {
+        if (customerIdentity == null) {
             throw new ForeignKeyNotFoundException();
         }
 
-        entity.setCompany(company);
+        entity.setCompany(customerIdentity);
 
         entity = service.save(entity);
 
@@ -86,8 +85,8 @@ public class PersonInChargeController {
             throw new EntityNotFoundException();
         }
 
-        Company company = companyService.findById(request.getCompanyId());
-        entity.setCompany(company);
+        Company customerIdentity = companyService.findById(request.getCompanyId());
+        entity.setCompany(customerIdentity);
 
         entity = service.save(entity);
 

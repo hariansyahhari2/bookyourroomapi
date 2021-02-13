@@ -1,8 +1,8 @@
-package com.hariansyah.bookyourrooms.api.models.entitymodels.responses;
+package com.hariansyah.bookyourrooms.api.models.entitysearch;
 
-public class PersonInChargeResponse {
+import com.hariansyah.bookyourrooms.api.models.pagination.PageSearch;
 
-    private Integer id;
+public class ContactPersonSearch extends PageSearch {
 
     private String firstName;
 
@@ -11,16 +11,6 @@ public class PersonInChargeResponse {
     private String position;
 
     private String contactNumber;
-
-    private CompanyResponse company;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -52,13 +42,5 @@ public class PersonInChargeResponse {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
-    }
-
-    public CompanyResponse getCompany() {
-        return company;
-    }
-
-    public void setCompany(CompanyResponse company) {
-        this.company = company;
     }
 }

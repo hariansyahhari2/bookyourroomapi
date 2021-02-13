@@ -88,7 +88,6 @@ public class CityController {
         Region customerIdentity = regionService.findById(request.getRegionId());
         entity.setRegion(customerIdentity);
 
-        modelMapper.map(request, entity);
         entity = service.save(entity);
 
         CityResponse data = modelMapper.map(entity, CityResponse.class);

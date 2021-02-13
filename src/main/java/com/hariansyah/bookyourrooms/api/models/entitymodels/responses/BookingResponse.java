@@ -2,15 +2,15 @@ package com.hariansyah.bookyourrooms.api.models.entitymodels.responses;
 
 import com.hariansyah.bookyourrooms.api.enums.StatusEnum;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class BookingResponse {
 
     private Integer id;
 
-    private LocalDateTime checkInDate;
+    private LocalDate checkInDate;
 
-    private LocalDateTime checkOutDate;
+    private LocalDate checkOutDate;
 
     private Integer personCount;
 
@@ -19,6 +19,10 @@ public class BookingResponse {
     private CustomerIdentityResponse guest;
 
     private RoomResponse room;
+
+    private Long numberOfNight;
+
+    private Long roomCount;
 
     private Integer subTotal;
 
@@ -32,19 +36,19 @@ public class BookingResponse {
         this.id = id;
     }
 
-    public LocalDateTime getCheckInDate() {
+    public LocalDate getCheckInDate() {
         return checkInDate;
     }
 
-    public void setCheckInDate(LocalDateTime checkInDate) {
+    public void setCheckInDate(LocalDate checkInDate) {
         this.checkInDate = checkInDate;
     }
 
-    public LocalDateTime getCheckOutDate() {
+    public LocalDate getCheckOutDate() {
         return checkOutDate;
     }
 
-    public void setCheckOutDate(LocalDateTime checkOutDate) {
+    public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
 
@@ -78,6 +82,22 @@ public class BookingResponse {
 
     public void setRoom(RoomResponse room) {
         this.room = room;
+    }
+
+    public Long getNumberOfNight() {
+        return numberOfNight;
+    }
+
+    public void setNumberOfNight(Long numberOfNight) {
+        this.numberOfNight = numberOfNight;
+    }
+
+    public Long getRoomCount() {
+        return roomCount;
+    }
+
+    public void setRoomCount(Long roomCount) {
+        this.roomCount = roomCount;
     }
 
     public Integer getSubTotal() {

@@ -1,10 +1,5 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.responses;
 
-import com.hariansyah.bookyourrooms.api.entities.City;
-import com.hariansyah.bookyourrooms.api.entities.Company;
-
-import java.time.LocalTime;
-
 public class HotelResponse {
 
     private Integer id;
@@ -13,13 +8,9 @@ public class HotelResponse {
 
     private String about;
 
-    private LocalTime checkInTime;
+    private CompanyResponse company;
 
-    private LocalTime checkOutTime;
-
-    private Company company;
-
-    private City city;
+    private CityResponse city;
 
     public Integer getId() {
         return id;
@@ -45,35 +36,19 @@ public class HotelResponse {
         this.about = about;
     }
 
-    public LocalTime getCheckInTime() {
-        return checkInTime;
-    }
-
-    public void setCheckInTime(LocalTime checkInTime) {
-        this.checkInTime = checkInTime;
-    }
-
-    public LocalTime getCheckOutTime() {
-        return checkOutTime;
-    }
-
-    public void setCheckOutTime(LocalTime checkOutTime) {
-        this.checkOutTime = checkOutTime;
-    }
-
-    public Company getCompany() {
+    public CompanyResponse getCompany() {
         return company;
     }
 
-    public void setCompany(Company company) {
+    public void setCompany(CompanyResponse company) {
         this.company = company;
     }
 
-    public City getCity() {
+    public CityResponse getCity() {
         return city;
     }
 
-    public void setCity(City city) {
+    public void setCity(CityResponse city) {
         this.city = city;
     }
 }

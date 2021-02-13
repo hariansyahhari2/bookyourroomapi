@@ -89,7 +89,6 @@ public class CompanyController {
         City city = cityService.findById(request.getCityId());
         entity.setCity(city);
 
-        modelMapper.map(request, entity);
         entity = service.save(entity);
 
         CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);

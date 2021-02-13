@@ -1,5 +1,6 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
+import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.entities.Hotel;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
@@ -11,6 +12,7 @@ import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.HotelRespo
 import com.hariansyah.bookyourrooms.api.models.entitysearch.HotelSearch;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
 import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
+import com.hariansyah.bookyourrooms.api.services.CityService;
 import com.hariansyah.bookyourrooms.api.services.CompanyService;
 import com.hariansyah.bookyourrooms.api.services.HotelService;
 import com.hariansyah.bookyourrooms.api.services.FileService;
@@ -41,6 +43,9 @@ public class HotelController {
     private CompanyService companyService;
 
     @Autowired
+    private CityService cityService;
+
+    @Autowired
     private FileService fileService;
 
     @GetMapping("/{id}")
@@ -62,12 +67,14 @@ public class HotelController {
         Hotel entity = modelMapper.map(model, Hotel.class);
 
         Company company = companyService.findById(model.getCompanyId());
+        City city = cityService.findById(model.getCityId());
 
-        if (company == null) {
+        if (company == null || city == null) {
             throw new ForeignKeyNotFoundException();
         }
 
         entity.setCompany(company);
+        entity.setCity(city);
 
         entity = service.save(entity);
 
@@ -86,9 +93,14 @@ public class HotelController {
         }
 
         Company company = companyService.findById(request.getCompanyId());
-        entity.setCompany(company);
+        City city = cityService.findById(request.getCityId());
+        if (company == null || city == null) {
+            throw new ForeignKeyNotFoundException();
+        }
 
-        modelMapper.map(request, entity);
+        entity.setCompany(company);
+        entity.setCity(city);
+
         entity = service.save(entity);
 
         HotelResponse data = modelMapper.map(entity, HotelResponse.class);

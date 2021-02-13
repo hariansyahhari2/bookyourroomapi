@@ -3,12 +3,13 @@ package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 import com.hariansyah.bookyourrooms.api.enums.IdentityCategoryEnum;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CustomerIdentityRequest {
 
     private Integer id;
 
-    @NotBlank
+    @NotNull
     private IdentityCategoryEnum identityCategory;
 
     @NotBlank

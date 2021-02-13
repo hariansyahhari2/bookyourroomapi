@@ -88,7 +88,6 @@ public class RoomController {
         Hotel hotel = hotelService.findById(request.getHotelId());
         entity.setHotel(hotel);
 
-        modelMapper.map(request, entity);
         entity = service.save(entity);
 
         RoomResponse data = modelMapper.map(entity, RoomResponse.class);

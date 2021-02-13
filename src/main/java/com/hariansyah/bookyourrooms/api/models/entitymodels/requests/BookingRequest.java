@@ -10,17 +10,14 @@ public class BookingRequest {
 
     private Integer id;
 
-    @NotBlank
+    @NotNull
     private LocalDate checkInDate;
 
-    @NotBlank
+    @NotNull
     private LocalDate checkOutDate;
 
     @NotNull
     private Integer personCount;
-
-    @NotNull
-    private Integer bookedById;
 
     @NotNull
     private Integer guestId;
@@ -28,7 +25,9 @@ public class BookingRequest {
     @NotNull
     private Integer roomId;
 
-    @NotBlank
+    @NotNull
+    private Long roomCount;
+
     private StatusEnum status;
 
     public Integer getId() {
@@ -63,14 +62,6 @@ public class BookingRequest {
         this.personCount = personCount;
     }
 
-    public Integer getBookedById() {
-        return bookedById;
-    }
-
-    public void setBookedById(Integer bookedById) {
-        this.bookedById = bookedById;
-    }
-
     public Integer getGuestId() {
         return guestId;
     }
@@ -85,6 +76,14 @@ public class BookingRequest {
 
     public void setRoomId(Integer roomId) {
         this.roomId = roomId;
+    }
+
+    public Long getRoomCount() {
+        return roomCount;
+    }
+
+    public void setRoomCount(Long roomCount) {
+        this.roomCount = roomCount;
     }
 
     public StatusEnum getStatus() {

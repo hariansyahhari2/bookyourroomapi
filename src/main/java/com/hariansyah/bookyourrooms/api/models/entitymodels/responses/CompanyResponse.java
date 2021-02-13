@@ -24,11 +24,11 @@ public class CompanyResponse {
         this.name = name;
     }
 
-    public CityResponse getRegion() {
+    public CityResponse getCity() {
         return city;
     }
 
-    public void setRegion(CityResponse city) {
+    public void setCity(CityResponse city) {
         this.city = city;
     }
 }

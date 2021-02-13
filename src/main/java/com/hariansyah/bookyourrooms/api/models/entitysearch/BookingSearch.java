@@ -1,12 +1,9 @@
 package com.hariansyah.bookyourrooms.api.models.entitysearch;
 
 import com.hariansyah.bookyourrooms.api.enums.StatusEnum;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.AccountResponse;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CustomerIdentityResponse;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.RoomResponse;
 import com.hariansyah.bookyourrooms.api.models.pagination.PageSearch;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static com.hariansyah.bookyourrooms.api.enums.StatusEnum.CONFIRMED;
 
@@ -14,11 +11,15 @@ public class BookingSearch extends PageSearch {
 
     private Integer id;
 
-    private LocalDateTime checkInDate;
+    private LocalDate checkInDate;
 
-    private LocalDateTime checkOutDate;
+    private LocalDate checkOutDate;
 
     private Integer personCount;
+
+    private Long numberOfNight;
+
+    private Long roomCount;
 
     private Integer subTotal;
 
@@ -32,19 +33,19 @@ public class BookingSearch extends PageSearch {
         this.id = id;
     }
 
-    public LocalDateTime getCheckInDate() {
+    public LocalDate getCheckInDate() {
         return checkInDate;
     }
 
-    public void setCheckInDate(LocalDateTime checkInDate) {
+    public void setCheckInDate(LocalDate checkInDate) {
         this.checkInDate = checkInDate;
     }
 
-    public LocalDateTime getCheckOutDate() {
+    public LocalDate getCheckOutDate() {
         return checkOutDate;
     }
 
-    public void setCheckOutDate(LocalDateTime checkOutDate) {
+    public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
 
@@ -54,6 +55,22 @@ public class BookingSearch extends PageSearch {
 
     public void setPersonCount(Integer personCount) {
         this.personCount = personCount;
+    }
+
+    public Long getNumberOfNight() {
+        return numberOfNight;
+    }
+
+    public void setNumberOfNight(Long numberOfNight) {
+        this.numberOfNight = numberOfNight;
+    }
+
+    public Long getRoomCount() {
+        return roomCount;
+    }
+
+    public void setRoomCount(Long roomCount) {
+        this.roomCount = roomCount;
     }
 
     public Integer getSubTotal() {
