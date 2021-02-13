@@ -15,7 +15,7 @@ import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
 import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
 import com.hariansyah.bookyourrooms.api.services.CompanyService;
 import com.hariansyah.bookyourrooms.api.services.FileService;
-import com.hariansyah.bookyourrooms.api.services.CityService;
+import com.hariansyah.bookyourrooms.api.services.jdbc.CityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleEmployee;
 import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleHotelManager;
 
 @RequestMapping("/company")

@@ -25,7 +25,6 @@ public class RoleValidation {
 
     private static void getHeaderToken(HttpServletRequest request, JwtToken jwtTokenUtil, AccountRepository accountRepository, RoleEnum role) {
         String token = request.getHeader("Authorization");
-        assert token != null;
         if (!token.startsWith("Bearer ")) {
             throw new InvalidCredentialsException();
         }
