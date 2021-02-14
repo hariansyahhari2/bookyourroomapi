@@ -1,14 +1,12 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.responses;
 
-import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.RegionElement;
-
 public class CityResponse {
 
     private Integer id;
 
     private String name;
 
-    private RegionElement region;
+    private RegionResponse region;
 
     public Integer getId() {
         return id;
@@ -26,11 +24,11 @@ public class CityResponse {
         this.name = name;
     }
 
-    public RegionElement getRegion() {
+    public RegionResponse getRegion() {
         return region;
     }
 
-    public void setRegion(RegionElement region) {
+    public void setRegion(RegionResponse region) {
         this.region = region;
     }
 }

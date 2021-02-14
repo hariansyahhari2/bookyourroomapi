@@ -1,9 +1,5 @@
 package com.hariansyah.bookyourrooms.api.models.entitymodels.responses;
 
-import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.CityElement;
-
-import java.util.List;
-
 public class RegionResponse {
 
     private Integer id;
