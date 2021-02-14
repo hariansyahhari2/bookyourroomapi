@@ -79,7 +79,7 @@ public class HotelRepositoryImpl implements HotelRepository {
     public Hotel findById(Integer id) {
         StringBuilder builder = new StringBuilder();
         String query = builder.append(selectQuery()).append("WHERE h.id = ? AND h.is_deleted = 0").toString();
-        List<Hotel> entityList = jdbcTemplate.query(selectQuery(), (rs, i) -> entityMapper(rs), id);
+        List<Hotel> entityList = jdbcTemplate.query(query, (rs, i) -> entityMapper(rs), id);
         if(entityList.size() == 0) throw new EntityNotFoundException();
         return entityList.get(0);
     }
