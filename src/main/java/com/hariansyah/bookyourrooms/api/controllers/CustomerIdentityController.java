@@ -24,7 +24,7 @@ import javax.validation.ValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("/my-identity")
+@RequestMapping("/identity")
 @RestController
 public class CustomerIdentityController {
 
@@ -61,7 +61,7 @@ public class CustomerIdentityController {
         throw new EntityNotFoundException();
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseMessage<CustomerIdentityResponse> add(
             @RequestBody @Valid CustomerIdentityRequest model,
             HttpServletRequest request
@@ -74,6 +74,7 @@ public class CustomerIdentityController {
 
             CustomerIdentity entity = modelMapper.map(model, CustomerIdentity.class);
             entity.setAccount(account);
+            entity.setDeleted(false);
             entity = service.save(entity);
 
             CustomerIdentityResponse data = modelMapper.map(entity, CustomerIdentityResponse.class);
