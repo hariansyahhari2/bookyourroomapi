@@ -70,9 +70,7 @@ public class CityController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) {
-            throw new InvalidCredentialsException();
-        }
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateAdmin(request);
         City entity = modelMapper.map(model, City.class);
 
@@ -93,7 +91,7 @@ public class CityController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateAdmin(request);
 
         City entity = service.findById(id);
@@ -111,7 +109,7 @@ public class CityController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateAdmin(request);
 
         service.findById(id);
@@ -135,7 +133,7 @@ public class CityController {
             HttpServletRequest request
     ) throws IOException {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateAdmin(request);
 
         City entity = service.findById(id);

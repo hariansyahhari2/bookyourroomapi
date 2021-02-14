@@ -70,7 +70,7 @@ public class ContactPersonController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManagerOrEmployee(request);
         ContactPerson entity = modelMapper.map(model, ContactPerson.class);
 
@@ -91,7 +91,7 @@ public class ContactPersonController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManagerOrEmployee(request);
         ContactPerson entity = service.findById(id);
 
@@ -108,7 +108,7 @@ public class ContactPersonController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManagerOrEmployee(request);
         service.findById(id);
 
@@ -131,7 +131,7 @@ public class ContactPersonController {
             HttpServletRequest request
     ) throws IOException {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
 
         ContactPerson entity = service.findById(id);
 

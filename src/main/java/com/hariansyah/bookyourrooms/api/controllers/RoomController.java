@@ -72,7 +72,7 @@ public class RoomController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
 
         Room entity = modelMapper.map(model, Room.class);
@@ -90,7 +90,7 @@ public class RoomController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
 
         Room entity = service.findById(id);
@@ -108,7 +108,7 @@ public class RoomController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
 
         service.findById(id);
@@ -132,7 +132,7 @@ public class RoomController {
             HttpServletRequest request
     ) throws IOException {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
 
         Room entity = service.findById(id);

@@ -70,7 +70,7 @@ public class CompanyController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
         Company entity = modelMapper.map(model, Company.class);
 
@@ -89,7 +89,7 @@ public class CompanyController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
         Company entity = service.findById(id);
 
@@ -106,7 +106,7 @@ public class CompanyController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
         service.findById(id);
 
@@ -129,7 +129,7 @@ public class CompanyController {
             HttpServletRequest request
     ) throws IOException {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
         Company entity = service.findById(id);
 

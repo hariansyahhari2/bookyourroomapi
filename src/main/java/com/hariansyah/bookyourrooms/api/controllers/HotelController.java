@@ -75,7 +75,7 @@ public class HotelController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
 
         Hotel entity = modelMapper.map(model, Hotel.class);
@@ -100,7 +100,7 @@ public class HotelController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
         Hotel entity = service.findById(id);
 
@@ -120,7 +120,7 @@ public class HotelController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
         service.findById(id);
 
@@ -143,7 +143,7 @@ public class HotelController {
             HttpServletRequest request
     ) throws IOException {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateManager(request);
         Hotel entity = service.findById(id);
 

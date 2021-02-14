@@ -56,7 +56,7 @@ public class RegionController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateAdmin(request);
 
         Region entity = modelMapper.map(model, Region.class);
@@ -70,7 +70,7 @@ public class RegionController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateAdmin(request);
 
         Region entity = service.findById(id);
@@ -85,7 +85,7 @@ public class RegionController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
         validateAdmin(request);
 
         Region entity = service.findById(id);
