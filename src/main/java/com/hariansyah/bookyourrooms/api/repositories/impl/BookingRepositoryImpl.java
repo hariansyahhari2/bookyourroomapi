@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -144,7 +145,7 @@ public class BookingRepositoryImpl implements BookingRepository {
     public Boolean save(Booking entity) {
         String query = "INSERT INTO booking" +
                 "(created_date, is_deleted, check_in_date, check_out_date, number_of_night, person_count, room_count, status, sub_total, booked_by, guest, room_id) values (?,?,?,?,?,?,?,?,?,?,?,?)";
-        jdbcTemplate.update(query, LocalDate.now(), Boolean.FALSE, entity.getCheckInDate(), entity.getCheckOutDate(), entity.getNumberOfNight(), entity.getPersonCount(),
+        jdbcTemplate.update(query, LocalDateTime.now(), Boolean.FALSE, entity.getCheckInDate(), entity.getCheckOutDate(), entity.getNumberOfNight(), entity.getPersonCount(),
                 entity.getRoomCount(), entity.getStatus().ordinal(), entity.getSubTotal(), entity.getBookedBy().getId(), entity.getGuest().getId(), entity.getRoom().getId());
         return true;
     }
@@ -154,7 +155,7 @@ public class BookingRepositoryImpl implements BookingRepository {
         String query = "UPDATE booking " +
                 "SET modified_date=?, check_in_date=?, check_out_date=?, number_of_night=?, person_count=?, room_count=?, status=?, sub_total=?, booked_by=?, guest=?, room_id=? " +
                 "WHERE id=? AND is_deleted = 0";
-        jdbcTemplate.update(query, LocalDate.now(), entity.getCheckInDate(), entity.getCheckOutDate(), entity.getNumberOfNight(), entity.getPersonCount(),
+        jdbcTemplate.update(query, LocalDateTime.now(), entity.getCheckInDate(), entity.getCheckOutDate(), entity.getNumberOfNight(), entity.getPersonCount(),
                 entity.getRoomCount(), entity.getStatus().ordinal(), entity.getSubTotal(), entity.getBookedBy().getId(), entity.getGuest().getId(), entity.getRoom().getId(), entity.getId());
         return true;
     }
@@ -164,7 +165,7 @@ public class BookingRepositoryImpl implements BookingRepository {
         String query = "UPDATE booking " +
                 "SET is_deleted=?, modified_date=? " +
                 "WHERE id=?";
-        jdbcTemplate.update(query, Boolean.TRUE, LocalDate.now());
+        jdbcTemplate.update(query, Boolean.TRUE, LocalDateTime.now(), id);
         return true;
     }
 

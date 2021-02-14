@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -83,7 +83,7 @@ public class ContactPersonRepositoryImpl implements ContactPersonRepository {
     public Boolean save(ContactPerson entity) {
         String query = "INSERT INTO contact_person" +
                 "(created_date, is_deleted, first_name, last_name, position, contact_number, company_id) values (?,?,?,?,?,?,?)";
-        jdbcTemplate.update(query, LocalDate.now(), Boolean.FALSE, entity.getFirstName(), entity.getLastName(), entity.getPosition(),
+        jdbcTemplate.update(query, LocalDateTime.now(), Boolean.FALSE, entity.getFirstName(), entity.getLastName(), entity.getPosition(),
                 entity.getContactNumber(), entity.getCompany().getId());
         return true;
     }
@@ -93,7 +93,7 @@ public class ContactPersonRepositoryImpl implements ContactPersonRepository {
         String query = "UPDATE contact_person " +
                 "SET modified_date=?, first_name=?, last_name=?, position=?, contact_number=?, company_id=? " +
                 "WHERE id=? AND is_deleted = 0";
-        jdbcTemplate.update(query, LocalDate.now(), entity.getFirstName(), entity.getLastName(), entity.getPosition(),
+        jdbcTemplate.update(query, LocalDateTime.now(), entity.getFirstName(), entity.getLastName(), entity.getPosition(),
                 entity.getContactNumber(), entity.getCompany().getId(), entity.getId());
         return true;
     }
@@ -103,7 +103,7 @@ public class ContactPersonRepositoryImpl implements ContactPersonRepository {
         String query = "UPDATE contact_person " +
                 "SET is_deleted=?, modified_date=? " +
                 "WHERE id=?";
-        jdbcTemplate.update(query, Boolean.TRUE, LocalDate.now());
+        jdbcTemplate.update(query, Boolean.TRUE, LocalDateTime.now(), id);
         return true;
     }
 }

@@ -1,7 +1,7 @@
 package com.hariansyah.bookyourrooms.api.repositories.impl;
 
-import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.entities.City;
+import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.entities.Region;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.repositories.CompanyRepository;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -68,7 +68,7 @@ public class CompanyRepositoryImpl implements CompanyRepository {
 
     public Boolean save(Company entity) {
         String query = "INSERT INTO company(created_date, is_deleted, name, city_id) values (?,?,?,?)";
-        jdbcTemplate.update(query, LocalDate.now(), Boolean.FALSE, entity.getName(), entity.getCity().getId());
+        jdbcTemplate.update(query, LocalDateTime.now(), Boolean.FALSE, entity.getName(), entity.getCity().getId());
         return true;
     }
 
@@ -76,7 +76,7 @@ public class CompanyRepositoryImpl implements CompanyRepository {
         String query = "UPDATE company " +
                 "SET modified_date=?, name=?, city_id=? " +
                 "WHERE id=? AND is_deleted = 0";
-        jdbcTemplate.update(query, LocalDate.now(), entity.getName(), entity.getCity().getId(), entity.getId());
+        jdbcTemplate.update(query, LocalDateTime.now(), entity.getName(), entity.getCity().getId(), entity.getId());
         return true;
     }
 
@@ -85,7 +85,7 @@ public class CompanyRepositoryImpl implements CompanyRepository {
         String query = "UPDATE company " +
                 "SET is_deleted=?, modified_date=? " +
                 "WHERE id=?";
-        jdbcTemplate.update(query, Boolean.TRUE, LocalDate.now());
+        jdbcTemplate.update(query, Boolean.TRUE, LocalDateTime.now(), id);
         return true;
     }
 }

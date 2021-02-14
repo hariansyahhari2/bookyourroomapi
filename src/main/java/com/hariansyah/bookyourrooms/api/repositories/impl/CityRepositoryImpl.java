@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -59,7 +59,7 @@ public class CityRepositoryImpl implements CityRepository {
     @Override
     public Boolean save(City entity) {
         String query = "INSERT INTO city(created_date, is_deleted, name, region_id) values (?, ?,?,?)";
-        jdbcTemplate.update(query, LocalDate.now(), Boolean.FALSE, entity.getName(), entity.getRegion().getId());
+        jdbcTemplate.update(query, LocalDateTime.now(), Boolean.FALSE, entity.getName(), entity.getRegion().getId());
         return true;
     }
 
@@ -67,7 +67,7 @@ public class CityRepositoryImpl implements CityRepository {
         String query = "UPDATE city " +
                 "SET modified_date=?, name=?, region_id=? " +
                 "WHERE id=? AND is_deleted = 0";
-        jdbcTemplate.update(query, LocalDate.now(), entity.getName(), entity.getRegion().getId(), entity.getId());
+        jdbcTemplate.update(query, LocalDateTime.now(), entity.getName(), entity.getRegion().getId(), entity.getId());
         return true;
     }
 
@@ -76,7 +76,7 @@ public class CityRepositoryImpl implements CityRepository {
         String query = "UPDATE city " +
                 "SET is_deleted=?, modified_date=? " +
                 "WHERE id=?";
-        jdbcTemplate.update(query, Boolean.TRUE, LocalDate.now());
+        jdbcTemplate.update(query, Boolean.TRUE, LocalDateTime.now(), id);
         return true;
     }
 }

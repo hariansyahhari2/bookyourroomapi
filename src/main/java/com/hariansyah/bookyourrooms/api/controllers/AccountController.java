@@ -76,7 +76,10 @@ public class AccountController {
             String loggedInUsername = jwtTokenUtil.getUsernameFromToken(token);
             Account loggedInAccount = repository.findByUsername(loggedInUsername);
 
-            if (loggedInAccount.getUsername().equals(account.getUsername()) || !loggedInAccount.getRole().equals(ADMIN) || !loggedInAccount.getRole().equals(HOTEL_MANAGER))
+            if (loggedInAccount.getUsername().equals(account.getUsername()) || loggedInAccount.getRole().equals(GUEST) || loggedInAccount.getRole().equals(HOTEL_EMPLOYEE))
+                throw new InvalidCredentialsException();
+
+            if (loggedInAccount.getRole().equals(account.getRole()) || (loggedInAccount.getRole().equals(HOTEL_MANAGER) && account.getRole().equals(ADMIN)))
                 throw new InvalidCredentialsException();
 
             account.setRole(GUEST);
@@ -96,11 +99,13 @@ public class AccountController {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             Account account = repository.findByUsername(username);
+            if (account == null) throw new EntityNotFoundException();
+
             token = token.substring(7);
             String loggedInUsername = jwtTokenUtil.getUsernameFromToken(token);
             Account loggedInAccount = repository.findByUsername(loggedInUsername);
 
-            if (!loggedInAccount.getRole().equals(ADMIN) || !loggedInAccount.getRole().equals(HOTEL_MANAGER))
+            if (loggedInAccount.getRole().equals(HOTEL_EMPLOYEE) || loggedInAccount.getRole().equals(GUEST))
                 throw new InvalidCredentialsException();
             account.setRole(HOTEL_EMPLOYEE);
             repository.save(account);

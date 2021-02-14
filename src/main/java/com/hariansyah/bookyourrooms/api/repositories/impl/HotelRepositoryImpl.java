@@ -1,6 +1,9 @@
 package com.hariansyah.bookyourrooms.api.repositories.impl;
 
-import com.hariansyah.bookyourrooms.api.entities.*;
+import com.hariansyah.bookyourrooms.api.entities.City;
+import com.hariansyah.bookyourrooms.api.entities.Company;
+import com.hariansyah.bookyourrooms.api.entities.Hotel;
+import com.hariansyah.bookyourrooms.api.entities.Region;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.repositories.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -88,7 +91,7 @@ public class HotelRepositoryImpl implements HotelRepository {
     public Boolean save(Hotel entity) {
         String query = "INSERT INTO hotel" +
                 "(created_date, is_deleted, name, about, company_id, city_id) values (?,?,?,?,?,?)";
-        jdbcTemplate.update(query, LocalDate.now(), Boolean.FALSE, entity.getName(), entity.getAbout(),
+        jdbcTemplate.update(query, LocalDateTime.now(), Boolean.FALSE, entity.getName(), entity.getAbout(),
                 entity.getCompany().getId(), entity.getCity().getId());
         return true;
     }
@@ -98,7 +101,7 @@ public class HotelRepositoryImpl implements HotelRepository {
         String query = "UPDATE hotel " +
                 "SET modified_date=?, name=?, about=?, company_id=?, city_id=? " +
                 "WHERE id=? AND is_deleted = 0";
-        jdbcTemplate.update(query, LocalDate.now(), entity.getName(), entity.getAbout(),
+        jdbcTemplate.update(query, LocalDateTime.now(), entity.getName(), entity.getAbout(),
                 entity.getCompany().getId(), entity.getCity().getId(), entity.getId());
         return true;
     }
@@ -108,7 +111,7 @@ public class HotelRepositoryImpl implements HotelRepository {
         String query = "UPDATE hotel " +
                 "SET is_deleted=?, modified_date=? " +
                 "WHERE id=?";
-        jdbcTemplate.update(query, Boolean.TRUE, LocalDate.now());
+        jdbcTemplate.update(query, Boolean.TRUE, LocalDateTime.now(), id);
         return true;
     }
 }

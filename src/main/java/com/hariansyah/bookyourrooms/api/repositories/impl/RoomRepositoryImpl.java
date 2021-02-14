@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -98,7 +98,7 @@ public class RoomRepositoryImpl implements RoomRepository {
     public Boolean save(Room entity) {
         String query = "INSERT INTO room" +
                 "(created_date, is_deleted, room_type, about, price, number_of_room, hotel_id) values (?,?,?,?,?,?,?)";
-        jdbcTemplate.update(query, LocalDate.now(), Boolean.FALSE, entity.getRoomType(), entity.getAbout(),
+        jdbcTemplate.update(query, LocalDateTime.now(), Boolean.FALSE, entity.getRoomType(), entity.getAbout(),
                 entity.getPrice(), entity.getNumberOfRoom(), entity.getHotel().getId());
         return true;
     }
@@ -108,7 +108,7 @@ public class RoomRepositoryImpl implements RoomRepository {
         String query = "UPDATE room " +
                 "SET modified_date=?, room_type=?, about, price=?, number_of_room=?, hotel_id=? " +
                 "WHERE id=? AND is_deleted = 0";
-        jdbcTemplate.update(query, LocalDate.now(), entity.getRoomType(), entity.getAbout(),
+        jdbcTemplate.update(query, LocalDateTime.now(), entity.getRoomType(), entity.getAbout(),
                 entity.getPrice(), entity.getNumberOfRoom(), entity.getHotel().getId(), entity.getId());
         return true;
     }
@@ -118,7 +118,7 @@ public class RoomRepositoryImpl implements RoomRepository {
         String query = "UPDATE room " +
                 "SET is_deleted=?, modified_date=? " +
                 "WHERE id=?";
-        jdbcTemplate.update(query, Boolean.TRUE, LocalDate.now());
+        jdbcTemplate.update(query, Boolean.TRUE, LocalDateTime.now(), id);
         return true;
     }
 }

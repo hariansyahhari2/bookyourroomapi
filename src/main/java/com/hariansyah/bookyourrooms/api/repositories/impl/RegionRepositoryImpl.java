@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -49,7 +49,7 @@ public class RegionRepositoryImpl implements RegionRepository {
     @Override
     public Boolean save (Region entity) {
         String query = "INSERT INTO region(created_date, is_deleted, name) values (?,?,?)";
-        jdbcTemplate.update(query, LocalDate.now(), Boolean.FALSE, entity.getName());
+        jdbcTemplate.update(query, LocalDateTime.now(), Boolean.FALSE, entity.getName());
         return true;
     }
 
@@ -58,7 +58,7 @@ public class RegionRepositoryImpl implements RegionRepository {
         String query = "UPDATE region " +
                 "SET modified_date=?, name=? " +
                 "WHERE id=? AND is_deleted = 0";
-        jdbcTemplate.update(query, LocalDate.now(), entity.getName(), entity.getId());
+        jdbcTemplate.update(query, LocalDateTime.now(), entity.getName(), entity.getId());
         return true;
     }
 
@@ -67,7 +67,7 @@ public class RegionRepositoryImpl implements RegionRepository {
         String query = "UPDATE region " +
                 "SET is_deleted=?, modified_date=? " +
                 "WHERE id=?";
-        jdbcTemplate.update(query, Boolean.TRUE, LocalDate.now());
+        jdbcTemplate.update(query, Boolean.TRUE, LocalDateTime.now(), id);
         return true;
     }
 }
