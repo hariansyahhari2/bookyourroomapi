@@ -3,16 +3,15 @@ package com.hariansyah.bookyourrooms.api.controllers;
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.Company;
-import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CompanyRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CompanyResponse;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
 import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
-import com.hariansyah.bookyourrooms.api.services.FileService;
 import com.hariansyah.bookyourrooms.api.services.CityService;
 import com.hariansyah.bookyourrooms.api.services.CompanyService;
+import com.hariansyah.bookyourrooms.api.services.FileService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -76,7 +75,6 @@ public class CompanyController {
 
         City city = cityService.findById(model.getCityId());
 
-        if (city == null) throw new ForeignKeyNotFoundException();
         entity.setCity(city);
 
         return ResponseMessage.success(service.save(entity));

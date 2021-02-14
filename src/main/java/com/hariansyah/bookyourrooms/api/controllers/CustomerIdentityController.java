@@ -2,26 +2,19 @@ package com.hariansyah.bookyourrooms.api.controllers;
 
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.Account;
-import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.CustomerIdentity;
-import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
-import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CustomerIdentityRequest;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CustomerIdentityWithAccountRequest;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CityResponse;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CustomerIdentityResponse;
 import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
 import com.hariansyah.bookyourrooms.api.services.CustomerIdentityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
