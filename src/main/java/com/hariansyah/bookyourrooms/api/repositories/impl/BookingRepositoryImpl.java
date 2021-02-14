@@ -143,19 +143,19 @@ public class BookingRepositoryImpl implements BookingRepository {
     @Override
     public Boolean save(Booking entity) {
         String query = "INSERT INTO booking" +
-                "(created_date, is_deleted, check_in_date, check_out_date, number_of_night, person_count, room_count, status, subtotal, booked_by, guest, room_id) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+                "(created_date, is_deleted, check_in_date, check_out_date, number_of_night, person_count, room_count, status, sub_total, booked_by, guest, room_id) values (?,?,?,?,?,?,?,?,?,?,?,?)";
         jdbcTemplate.update(query, LocalDate.now(), Boolean.FALSE, entity.getCheckInDate(), entity.getCheckOutDate(), entity.getNumberOfNight(), entity.getPersonCount(),
-                entity.getRoomCount(), entity.getStatus(), entity.getSubTotal(), entity.getBookedBy().getId(), entity.getGuest().getId(), entity.getRoom().getId());
+                entity.getRoomCount(), entity.getStatus().ordinal(), entity.getSubTotal(), entity.getBookedBy().getId(), entity.getGuest().getId(), entity.getRoom().getId());
         return true;
     }
 
     @Override
     public Boolean edit(Booking entity) {
         String query = "UPDATE booking " +
-                "SET modified_date=?, check_in_date=?, check_out_date=?, number_of_night=?, person_count=?, room_count=?, status=?, subtotal=?, booked_by=?, guest=?, room_id=? " +
+                "SET modified_date=?, check_in_date=?, check_out_date=?, number_of_night=?, person_count=?, room_count=?, status=?, sub_total=?, booked_by=?, guest=?, room_id=? " +
                 "WHERE id=? AND is_deleted = 0";
         jdbcTemplate.update(query, LocalDate.now(), entity.getCheckInDate(), entity.getCheckOutDate(), entity.getNumberOfNight(), entity.getPersonCount(),
-                entity.getRoomCount(), entity.getStatus(), entity.getSubTotal(), entity.getBookedBy().getId(), entity.getGuest().getId(), entity.getRoom().getId(), entity.getId());
+                entity.getRoomCount(), entity.getStatus().ordinal(), entity.getSubTotal(), entity.getBookedBy().getId(), entity.getGuest().getId(), entity.getRoom().getId(), entity.getId());
         return true;
     }
 
