@@ -1,24 +1,20 @@
 package com.hariansyah.bookyourrooms.api.controllers;
 
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
-import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.entities.City;
-import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
+import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.elements.CompanyElement;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CompanyRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CompanyResponse;
-import com.hariansyah.bookyourrooms.api.models.entitysearch.CompanySearch;
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
-import com.hariansyah.bookyourrooms.api.models.pagination.PagedList;
 import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
-import com.hariansyah.bookyourrooms.api.services.CompanyService;
 import com.hariansyah.bookyourrooms.api.services.FileService;
-import com.hariansyah.bookyourrooms.api.services.jdbc.CityService;
+import com.hariansyah.bookyourrooms.api.services.CityService;
+import com.hariansyah.bookyourrooms.api.services.CompanyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,102 +59,66 @@ public class CompanyController {
             @PathVariable Integer id
     ) {
         Company entity = service.findById(id);
-        if(entity != null) {
-            CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);
-            return ResponseMessage.success(data);
-        }
-        throw new EntityNotFoundException();
+
+        CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);
+        return ResponseMessage.success(data);
     }
 
     @PostMapping
-    public ResponseMessage<CompanyResponse> add(
+    public ResponseMessage<Boolean> add(
             @RequestBody @Valid CompanyRequest model,
             HttpServletRequest request
     ) {
+        String token = request.getHeader("Authorization");
+        if (token == null) throw new InvalidCredentialsException();
         validateManager(request);
         Company entity = modelMapper.map(model, Company.class);
 
         City city = cityService.findById(model.getCityId());
 
-        if (city == null) {
-            throw new ForeignKeyNotFoundException();
-        }
-
+        if (city == null) throw new ForeignKeyNotFoundException();
         entity.setCity(city);
 
-        entity = service.save(entity);
-
-        CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);
-        return ResponseMessage.success(data);
+        return ResponseMessage.success(service.save(entity));
     }
 
     @PutMapping("/{id}")
-    public ResponseMessage<CompanyResponse> edit(
+    public ResponseMessage<Boolean> edit(
             @PathVariable Integer id,
             @RequestBody @Valid CompanyRequest model,
             HttpServletRequest request
     ) {
+        String token = request.getHeader("Authorization");
+        if (token == null) throw new InvalidCredentialsException();
         validateManager(request);
         Company entity = service.findById(id);
-        if(entity == null) {
-            throw new EntityNotFoundException();
-        }
 
         City city = cityService.findById(model.getCityId());
         entity.setCity(city);
 
-        entity = service.save(entity);
-
-        CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);
-        return ResponseMessage.success(data);
+        modelMapper.map(model, entity);
+        return ResponseMessage.success(service.edit(entity));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseMessage<CompanyResponse> delete(
+    public ResponseMessage<Boolean> delete(
             @PathVariable Integer id,
             HttpServletRequest request
     ) {
+        String token = request.getHeader("Authorization");
+        if (token == null) throw new InvalidCredentialsException();
         validateManager(request);
-        Company entity = service.removeById(id);
-        if (entity == null) {
-            throw new EntityNotFoundException();
-        }
+        service.findById(id);
 
-        CompanyResponse data = modelMapper.map(entity, CompanyResponse.class);
-        return ResponseMessage.success(data);
+        return ResponseMessage.success(service.removeById(id));
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseMessage<List<CompanyResponse>> findAll() {
         List<Company> entities = service.findAll();
         List<CompanyResponse> data = entities.stream()
                 .map(e -> modelMapper.map(e, CompanyResponse.class))
                 .collect(Collectors.toList());
-        return ResponseMessage.success(data);
-    }
-
-    @GetMapping
-    public ResponseMessage<PagedList<CompanyElement>> findAll(
-            @Valid CompanySearch model
-            ) {
-        Company search = modelMapper.map(model, Company.class);
-
-        Page<Company> entityPage = service.findAll(
-                search, model.getPage(), model.getSize(), model.getSort()
-        );
-        List<Company> entities = entityPage.toList();
-
-        List<CompanyElement> models = entities.stream()
-                .map(e -> modelMapper.map(e, CompanyElement.class))
-                .collect(Collectors.toList());
-
-        PagedList<CompanyElement> data = new PagedList<>(
-                models,
-                entityPage.getNumber(),
-                entityPage.getSize(),
-                entityPage.getTotalElements()
-        );
-
         return ResponseMessage.success(data);
     }
 
@@ -168,11 +128,10 @@ public class CompanyController {
             ImageUploadRequest model,
             HttpServletRequest request
     ) throws IOException {
+        String token = request.getHeader("Authorization");
+        if (token == null) throw new InvalidCredentialsException();
         validateManager(request);
         Company entity = service.findById(id);
-        if (entity == null) {
-            throw new EntityExistsException();
-        }
 
         fileService.upload(entity, model.getFile().getInputStream());
 

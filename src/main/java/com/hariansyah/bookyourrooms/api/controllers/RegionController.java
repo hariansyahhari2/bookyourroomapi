@@ -8,7 +8,7 @@ import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.RegionRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.RegionResponse;
 import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
-import com.hariansyah.bookyourrooms.api.services.jdbc.RegionService;
+import com.hariansyah.bookyourrooms.api.services.RegionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,11 +45,9 @@ public class RegionController {
             @PathVariable Integer id
     ) {
         Region entity = service.findById(id);
-        if(entity != null) {
-            RegionResponse data = modelMapper.map(entity, RegionResponse.class);
-            return ResponseMessage.success(data);
-        }
-        throw new EntityNotFoundException();
+
+        RegionResponse data = modelMapper.map(entity, RegionResponse.class);
+        return ResponseMessage.success(data);
     }
 
     @PostMapping
@@ -76,7 +74,6 @@ public class RegionController {
         validateAdmin(request);
 
         Region entity = service.findById(id);
-        if(entity == null) throw new EntityNotFoundException();
 
         modelMapper.map(model, entity);
         return ResponseMessage.success(service.edit(entity));

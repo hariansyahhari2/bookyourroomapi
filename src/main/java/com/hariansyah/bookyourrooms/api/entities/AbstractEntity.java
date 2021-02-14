@@ -2,8 +2,6 @@ package com.hariansyah.bookyourrooms.api.entities;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -14,6 +12,9 @@ public abstract class AbstractEntity<ID> {
 
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
+
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 
     public abstract ID getId();
 
@@ -35,13 +36,11 @@ public abstract class AbstractEntity<ID> {
         this.modifiedDate = modifedDate;
     }
 
-    @PrePersist
-    public void prePersist() {
-        createDate = LocalDateTime.now();
+    public Boolean getDeleted() {
+        return isDeleted;
     }
 
-    @PreUpdate
-    public void preUpdate() {
-        modifiedDate = LocalDateTime.now();
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 }

@@ -1,4 +1,4 @@
-package com.hariansyah.bookyourrooms.api.repositories.jdbc;
+package com.hariansyah.bookyourrooms.api.repositories;
 
 import java.util.List;
 

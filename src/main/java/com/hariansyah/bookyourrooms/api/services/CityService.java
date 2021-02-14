@@ -1,4 +1,4 @@
-package com.hariansyah.bookyourrooms.api.services.jdbc;
+package com.hariansyah.bookyourrooms.api.services;
 
 import com.hariansyah.bookyourrooms.api.entities.City;
 

@@ -3,7 +3,6 @@ package com.hariansyah.bookyourrooms.api.controllers;
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.Region;
-import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
@@ -12,8 +11,8 @@ import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CityRespon
 import com.hariansyah.bookyourrooms.api.models.fileupload.ImageUploadRequest;
 import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
 import com.hariansyah.bookyourrooms.api.services.FileService;
-import com.hariansyah.bookyourrooms.api.services.jdbc.CityService;
-import com.hariansyah.bookyourrooms.api.services.jdbc.RegionService;
+import com.hariansyah.bookyourrooms.api.services.CityService;
+import com.hariansyah.bookyourrooms.api.services.RegionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -60,11 +59,9 @@ public class CityController {
             @PathVariable Integer id
     ) {
         City entity = service.findById(id);
-        if(entity != null) {
-            CityResponse data = modelMapper.map(entity, CityResponse.class);
-            return ResponseMessage.success(data);
-        }
-        throw new EntityNotFoundException();
+
+        CityResponse data = modelMapper.map(entity, CityResponse.class);
+        return ResponseMessage.success(data);
     }
 
     @PostMapping
@@ -100,11 +97,11 @@ public class CityController {
         validateAdmin(request);
 
         City entity = service.findById(id);
-        if(entity == null) throw new EntityNotFoundException();
 
         Region customerIdentity = regionService.findById(model.getRegionId());
         entity.setRegion(customerIdentity);
 
+        modelMapper.map(model, entity);
         return ResponseMessage.success(service.edit(entity));
     }
 
@@ -117,9 +114,9 @@ public class CityController {
         if (token == null) throw new InvalidCredentialsException();
         validateAdmin(request);
 
-        City entity = service.findById(id);
-        if (entity == null) throw new EntityNotFoundException();
-        return ResponseMessage.success(service.save(entity));
+        service.findById(id);
+
+        return ResponseMessage.success(service.removeById(id));
     }
 
     @GetMapping
@@ -142,9 +139,6 @@ public class CityController {
         validateAdmin(request);
 
         City entity = service.findById(id);
-        if (entity == null) {
-            throw new EntityExistsException();
-        }
 
         fileService.upload(entity, model.getFile().getInputStream());
 

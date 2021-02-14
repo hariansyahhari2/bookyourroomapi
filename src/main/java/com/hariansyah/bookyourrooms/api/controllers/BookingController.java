@@ -5,13 +5,11 @@ import com.hariansyah.bookyourrooms.api.entities.*;
 import com.hariansyah.bookyourrooms.api.exceptions.*;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.BookingRequest;
+import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.DateRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.BookingResponse;
-import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CityResponse;
 import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
-import com.hariansyah.bookyourrooms.api.repositories.BookingRepository;
-import com.hariansyah.bookyourrooms.api.services.AccountService;
-import com.hariansyah.bookyourrooms.api.services.BookingService;
 import com.hariansyah.bookyourrooms.api.services.CustomerIdentityService;
+import com.hariansyah.bookyourrooms.api.services.BookingService;
 import com.hariansyah.bookyourrooms.api.services.RoomService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.hariansyah.bookyourrooms.api.enums.RoleEnum.GUEST;
 import static com.hariansyah.bookyourrooms.api.enums.StatusEnum.*;
+import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleManagerOREmployee;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @RequestMapping("/booking")
@@ -41,9 +40,6 @@ public class BookingController {
     private CustomerIdentityService customerIdentityService;
 
     @Autowired
-    private BookingRepository repository;
-
-    @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
@@ -51,6 +47,10 @@ public class BookingController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    private void validateManagerOrEmployee(HttpServletRequest request) {
+        validateRoleManagerOREmployee(request, jwtTokenUtil, accountRepository);
+    }
 
     @GetMapping("/{id}")
     public ResponseMessage<BookingResponse> findById(
@@ -65,7 +65,7 @@ public class BookingController {
     }
 
     @PostMapping("book")
-    public ResponseMessage<BookingResponse> book(
+    public ResponseMessage<Boolean> book(
             @RequestBody @Valid BookingRequest model,
             HttpServletRequest request
     ) {
@@ -74,9 +74,6 @@ public class BookingController {
             throw new DateInvalidException();
         }
         Room room = roomService.findById(model.getRoomId());
-        if (room == null) {
-            throw new ForeignKeyNotFoundException();
-        }
 
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
@@ -85,9 +82,7 @@ public class BookingController {
             Account bookedBy = accountRepository.findByUsername(username);
             CustomerIdentity guest = customerIdentityService.findById(model.getGuestId());
 
-            if (!guest.getAccount().getUsername().equals(username)) {
-                throw new InvalidCredentialsException();
-            }
+            if (!guest.getAccount().getUsername().equals(username)) throw new InvalidCredentialsException();
 
             Booking entity = modelMapper.map(model, Booking.class);
             LocalDate checkIn = model.getCheckInDate();
@@ -98,46 +93,31 @@ public class BookingController {
             entity.setGuest(guest);
             entity.setNumberOfNight(numberOfNight);
 
-            List<Booking> checkRoom = repository.findNumberOfBooked(checkIn, checkOut, room.getId());
+            Long checkRoom = service.findNumberOfBooked(checkIn, checkOut, room.getId());
 
-            Long numberOfBookedRoom = 0L;
-
-            for (Booking checkedRoom : checkRoom) {
-                numberOfBookedRoom += checkedRoom.getRoomCount();
-            }
-
-            if ((numberOfBookedRoom + model.getRoomCount()) <= room.getNumberOfRoom()) {
+            if ((checkRoom + model.getRoomCount()) <= room.getNumberOfRoom()) {
                 Double subTotal = entity.getRoomCount() * room.getPrice() * numberOfNight;
 
                 entity.setRoom(room);
                 entity.setSubTotal(subTotal);
                 entity.setStatus(CONFIRMED);
-                entity = service.save(entity);
 
-                BookingResponse data = modelMapper.map(entity, BookingResponse.class);
-                return ResponseMessage.success(data);
+                return ResponseMessage.success(service.save(entity));
             }
         }
         throw new RoomNotAvailableException();
     }
 
     @GetMapping("/{id}/cancel")
-    public ResponseMessage<BookingResponse> cancel(
+    public ResponseMessage<Boolean> cancel(
             @PathVariable Integer id,
             HttpServletRequest request
     ) {
         Booking entity = service.findById(id);
-        if(entity == null) {
-            throw new EntityNotFoundException();
-        }
 
-        if (entity.getStatus().equals(CANCELLED)) {
-            throw new StatusCancelledException();
-        }
+        if (entity.getStatus().equals(CANCELLED)) throw new StatusCancelledException();
 
-        if (entity.getStatus().equals(CHECKED_IN)) {
-            throw new StatusCheckedInException();
-        }
+        if (entity.getStatus().equals(CHECKED_IN)) throw new StatusCheckedInException();
 
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
@@ -147,48 +127,123 @@ public class BookingController {
                 throw new InvalidCredentialsException();
             }
             entity.setStatus(CANCELLED);
-            entity = service.save(entity);
-            BookingResponse data = modelMapper.map(entity, BookingResponse.class);
-            return ResponseMessage.success(data);
+            return ResponseMessage.success(service.edit(entity));
         }
-        throw new ForeignKeyNotFoundException();
+        throw new InvalidCredentialsException();
     }
 
     @GetMapping("/{id}/check-in")
-    public ResponseMessage<BookingResponse> checkIn(
+    public ResponseMessage<Boolean> checkIn(
             @PathVariable Integer id,
             HttpServletRequest request
     ) {
         Booking entity = service.findById(id);
-        if(entity == null) {
-            throw new EntityNotFoundException();
-        }
 
-        if (entity.getStatus().equals(CANCELLED)) {
-            throw new StatusCancelledException();
-        }
-        if (entity.getStatus().equals(CHECKED_IN)) {
-            throw new StatusCheckedInException();
-        }
+        if (entity.getStatus().equals(CANCELLED)) throw new StatusCancelledException();
+        if (entity.getStatus().equals(CHECKED_IN)) throw new StatusCheckedInException();
 
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
             String username = jwtTokenUtil.getUsernameFromToken(token);
             Account account = accountRepository.findByUsername(username);
-            if (!entity.getBookedBy().getUsername().equals(username) || !account.getRole().equals(GUEST)) {
+            if (!entity.getBookedBy().getUsername().equals(username) || !account.getRole().equals(GUEST))
                 throw new InvalidCredentialsException();
-            }
+
             entity.setStatus(CHECKED_IN);
-            entity = service.save(entity);
-            BookingResponse data = modelMapper.map(entity, BookingResponse.class);
+            return ResponseMessage.success(service.edit(entity));
+        }
+        throw new InvalidCredentialsException();
+    }
+
+    @GetMapping
+    public ResponseMessage<List<BookingResponse>> findAll(
+            HttpServletRequest request
+    ) {
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+            String username = jwtTokenUtil.getUsernameFromToken(token);
+            Account account = accountRepository.findByUsername(username);
+
+            List<Booking> entities = service.findAll();
+            if (account.getRole().equals(GUEST)) {
+                entities = entities.stream().filter(entity -> entity.getBookedBy().getUsername().equals(username))
+                        .collect(Collectors.toList());
+            }
+
+            List<BookingResponse> data = entities.stream()
+                    .map(e -> modelMapper.map(e, BookingResponse.class))
+                    .collect(Collectors.toList());
             return ResponseMessage.success(data);
         }
-        throw new ForeignKeyNotFoundException();
+        throw new InvalidCredentialsException();
+    }
+
+    @PostMapping("/hotel/{hotelId}")
+    public ResponseMessage<List<BookingResponse>> findAllBookingByHotelWithTimeRange(
+            @PathVariable Integer hotelId,
+            @RequestBody @Valid DateRequest model,
+            HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        validateManagerOrEmployee(request);
+
+        List<Booking> entities = service.findAllBookingByHotelWithTimeRange(model.getFirstDate(), model.getLastDate(), hotelId);
+        List<BookingResponse> data = entities.stream()
+                .map(e -> modelMapper.map(e, BookingResponse.class))
+                .collect(Collectors.toList());
+        return ResponseMessage.success(data);
+    }
+
+    @GetMapping("/room/{roomId}")
+    public ResponseMessage<List<BookingResponse>> findAllBookingByRoomWithTimeRange(
+            @PathVariable Integer roomId,
+            @RequestBody @Valid DateRequest model,
+            HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        validateManagerOrEmployee(request);
+
+        List<Booking> entities = service.findAllBookingByRoomWithTimeRange(model.getFirstDate(), model.getLastDate(), roomId);
+        List<BookingResponse> data = entities.stream()
+                .map(e -> modelMapper.map(e, BookingResponse.class))
+                .collect(Collectors.toList());
+        return ResponseMessage.success(data);
+    }
+
+    @GetMapping("/hotel/{hotelId}/all-time")
+    public ResponseMessage<List<BookingResponse>> findAllBookingByHotelAllTime(
+            @PathVariable Integer hotelId,
+            HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        validateManagerOrEmployee(request);
+
+        List<Booking> entities = service.findAllBookingByHotelAllTime(hotelId);
+        List<BookingResponse> data = entities.stream()
+                .map(e -> modelMapper.map(e, BookingResponse.class))
+                .collect(Collectors.toList());
+        return ResponseMessage.success(data);
+    }
+
+    @GetMapping("/room/{roomId}/all-time")
+    public ResponseMessage<List<BookingResponse>> findAllBookingByRoomAllTime(
+            @PathVariable Integer roomId,
+            HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        validateManagerOrEmployee(request);
+
+        List<Booking> entities = service.findAllBookingByRoomAllTime(roomId);
+        List<BookingResponse> data = entities.stream()
+                .map(e -> modelMapper.map(e, BookingResponse.class))
+                .collect(Collectors.toList());
+        return ResponseMessage.success(data);
     }
 
     @GetMapping("/all")
-    public ResponseMessage<List<BookingResponse>> findAll(
+    public ResponseMessage<List<BookingResponse>> findAllBookingBy(
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");

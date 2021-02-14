@@ -1,8 +1,8 @@
-package com.hariansyah.bookyourrooms.api.services.jdbc.impl;
+package com.hariansyah.bookyourrooms.api.services.impl;
 
 import com.hariansyah.bookyourrooms.api.entities.City;
-import com.hariansyah.bookyourrooms.api.repositories.jdbc.CityRepository;
-import com.hariansyah.bookyourrooms.api.services.jdbc.CityService;
+import com.hariansyah.bookyourrooms.api.repositories.CityRepository;
+import com.hariansyah.bookyourrooms.api.services.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,16 +1,41 @@
 package com.hariansyah.bookyourrooms.api.services.impl;
 
 import com.hariansyah.bookyourrooms.api.entities.Hotel;
+import com.hariansyah.bookyourrooms.api.repositories.HotelRepository;
 import com.hariansyah.bookyourrooms.api.services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class HotelServiceImpl extends CommonServiceImpl<Hotel, Integer> implements HotelService {
+public class HotelServiceImpl implements HotelService {
 
     @Autowired
-    protected HotelServiceImpl(JpaRepository<Hotel, Integer> repository) {
-        super(repository);
+    private HotelRepository repository;
+
+    @Override
+    public List<Hotel> findAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public Hotel findById(Integer id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    public Boolean save(Hotel entity) {
+        return repository.save(entity);
+    }
+
+    @Override
+    public Boolean edit(Hotel entity) {
+        return repository.edit(entity);
+    }
+
+    @Override
+    public Boolean removeById(Integer id) {
+        return repository.remove(id);
     }
 }
