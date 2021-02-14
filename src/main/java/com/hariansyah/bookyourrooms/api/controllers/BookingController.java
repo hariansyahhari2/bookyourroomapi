@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.hariansyah.bookyourrooms.api.enums.RoleEnum.GUEST;
+import static com.hariansyah.bookyourrooms.api.enums.RoleEnum.*;
 import static com.hariansyah.bookyourrooms.api.enums.StatusEnum.*;
 import static com.hariansyah.bookyourrooms.api.models.validations.RoleValidation.validateRoleManagerOREmployee;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -123,7 +123,8 @@ public class BookingController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
             String username = jwtTokenUtil.getUsernameFromToken(token);
-            if (!entity.getBookedBy().getUsername().equals(username)) {
+            Account account = accountRepository.findByUsername(username);
+            if (!entity.getBookedBy().getUsername().equals(username) || account.getRole().equals(HOTEL_EMPLOYEE) || account.getRole().equals(HOTEL_MANAGER)) {
                 throw new InvalidCredentialsException();
             }
             entity.setStatus(CANCELLED);
@@ -147,7 +148,7 @@ public class BookingController {
             token = token.substring(7);
             String username = jwtTokenUtil.getUsernameFromToken(token);
             Account account = accountRepository.findByUsername(username);
-            if (!entity.getBookedBy().getUsername().equals(username) || !account.getRole().equals(GUEST))
+            if (!entity.getBookedBy().getUsername().equals(username) || account.getRole().equals(HOTEL_EMPLOYEE) || account.getRole().equals(HOTEL_MANAGER))
                 throw new InvalidCredentialsException();
 
             entity.setStatus(CHECKED_IN);
@@ -240,29 +241,5 @@ public class BookingController {
                 .map(e -> modelMapper.map(e, BookingResponse.class))
                 .collect(Collectors.toList());
         return ResponseMessage.success(data);
-    }
-
-    @GetMapping("/all")
-    public ResponseMessage<List<BookingResponse>> findAllBookingBy(
-            HttpServletRequest request
-    ) {
-        String token = request.getHeader("Authorization");
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-            String username = jwtTokenUtil.getUsernameFromToken(token);
-            Account account = accountRepository.findByUsername(username);
-
-            List<Booking> entities = service.findAll();
-            if (account.getRole().equals(GUEST)) {
-                entities = entities.stream().filter(entity -> entity.getBookedBy().getUsername().equals(username))
-                        .collect(Collectors.toList());
-            }
-
-            List<BookingResponse> data = entities.stream()
-                    .map(e -> modelMapper.map(e, BookingResponse.class))
-                    .collect(Collectors.toList());
-            return ResponseMessage.success(data);
-        }
-        throw new InvalidCredentialsException();
     }
 }

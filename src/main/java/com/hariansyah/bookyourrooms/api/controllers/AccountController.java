@@ -76,13 +76,9 @@ public class AccountController {
             String loggedInUsername = jwtTokenUtil.getUsernameFromToken(token);
             Account loggedInAccount = repository.findByUsername(loggedInUsername);
 
-            if (loggedInAccount.getUsername().equals(account.getUsername())) {
+            if (loggedInAccount.getUsername().equals(account.getUsername()) || !loggedInAccount.getRole().equals(ADMIN) || !loggedInAccount.getRole().equals(HOTEL_MANAGER))
                 throw new InvalidCredentialsException();
-            }
 
-            if (!loggedInAccount.getRole().equals(ADMIN) || !loggedInAccount.getRole().equals(HOTEL_MANAGER)) {
-                throw new InvalidCredentialsException();
-            }
             account.setRole(GUEST);
             repository.save(account);
 
@@ -104,13 +100,8 @@ public class AccountController {
             String loggedInUsername = jwtTokenUtil.getUsernameFromToken(token);
             Account loggedInAccount = repository.findByUsername(loggedInUsername);
 
-            if (loggedInAccount.getUsername().equals(account.getUsername())) {
+            if (!loggedInAccount.getRole().equals(ADMIN) || !loggedInAccount.getRole().equals(HOTEL_MANAGER))
                 throw new InvalidCredentialsException();
-            }
-
-            if (!loggedInAccount.getRole().equals(ADMIN) || !loggedInAccount.getRole().equals(HOTEL_MANAGER)) {
-                throw new InvalidCredentialsException();
-            }
             account.setRole(HOTEL_EMPLOYEE);
             repository.save(account);
 
@@ -132,13 +123,7 @@ public class AccountController {
             String loggedInUsername = jwtTokenUtil.getUsernameFromToken(token);
             Account loggedInAccount = repository.findByUsername(loggedInUsername);
 
-            if (loggedInAccount.getUsername().equals(account.getUsername())) {
-                throw new InvalidCredentialsException();
-            }
-
-            if (!loggedInAccount.getRole().equals(ADMIN)) {
-                throw new InvalidCredentialsException();
-            }
+            if (!loggedInAccount.getRole().equals(ADMIN)) throw new InvalidCredentialsException();
             account.setRole(HOTEL_MANAGER);
             repository.save(account);
 

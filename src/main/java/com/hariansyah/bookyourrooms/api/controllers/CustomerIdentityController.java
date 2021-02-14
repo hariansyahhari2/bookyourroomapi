@@ -6,6 +6,7 @@ import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.CustomerIdentity;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CustomerIdentityRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CustomerIdentityWithAccountRequest;
@@ -58,7 +59,7 @@ public class CustomerIdentityController {
                 }
             }
         }
-        throw new EntityNotFoundException();
+        throw new InvalidCredentialsException();
     }
 
     @PostMapping("/add")
@@ -80,7 +81,7 @@ public class CustomerIdentityController {
             CustomerIdentityResponse data = modelMapper.map(entity, CustomerIdentityResponse.class);
             return ResponseMessage.success(data);
         }
-        throw new ForeignKeyNotFoundException();
+        throw new InvalidCredentialsException();
     }
 
     @PutMapping("{id}")
@@ -104,10 +105,10 @@ public class CustomerIdentityController {
                 return ResponseMessage.success(data);
             }
         }
-        throw new EntityNotFoundException();
+        throw new InvalidCredentialsException();
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseMessage<List<CustomerIdentityResponse>> findAll(
             HttpServletRequest request
     ) {
@@ -125,6 +126,6 @@ public class CustomerIdentityController {
 
             return ResponseMessage.success(data);
         }
-        throw new EntityNotFoundException();
+        throw new InvalidCredentialsException();
     }
 }
