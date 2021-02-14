@@ -3,7 +3,7 @@ package com.hariansyah.bookyourrooms.api.controllers;
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.entities.ContactPerson;
-import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidPermissionsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.ContactPersonRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.ContactPersonResponse;
@@ -69,7 +69,7 @@ public class ContactPersonController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManagerOrEmployee(request);
         ContactPerson entity = modelMapper.map(model, ContactPerson.class);
 
@@ -86,7 +86,7 @@ public class ContactPersonController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManagerOrEmployee(request);
         ContactPerson entity = service.findById(id);
 
@@ -103,7 +103,7 @@ public class ContactPersonController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManagerOrEmployee(request);
         service.findById(id);
 
@@ -126,7 +126,7 @@ public class ContactPersonController {
             HttpServletRequest request
     ) throws IOException {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
 
         ContactPerson entity = service.findById(id);
 

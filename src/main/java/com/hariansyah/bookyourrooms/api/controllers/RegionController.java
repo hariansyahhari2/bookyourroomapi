@@ -3,7 +3,7 @@ package com.hariansyah.bookyourrooms.api.controllers;
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.Region;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
-import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidPermissionsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.RegionRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.RegionResponse;
@@ -56,7 +56,7 @@ public class RegionController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateAdmin(request);
 
         Region entity = modelMapper.map(model, Region.class);
@@ -70,7 +70,7 @@ public class RegionController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateAdmin(request);
 
         Region entity = service.findById(id);
@@ -85,7 +85,7 @@ public class RegionController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateAdmin(request);
 
         Region entity = service.findById(id);

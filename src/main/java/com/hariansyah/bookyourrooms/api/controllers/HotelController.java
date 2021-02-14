@@ -4,7 +4,7 @@ import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.Company;
 import com.hariansyah.bookyourrooms.api.entities.Hotel;
-import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidPermissionsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.HotelRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.HotelResponse;
@@ -74,7 +74,7 @@ public class HotelController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManager(request);
 
         Hotel entity = modelMapper.map(model, Hotel.class);
@@ -95,7 +95,7 @@ public class HotelController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManager(request);
         Hotel entity = service.findById(id);
 
@@ -115,7 +115,7 @@ public class HotelController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManager(request);
         service.findById(id);
 
@@ -138,7 +138,7 @@ public class HotelController {
             HttpServletRequest request
     ) throws IOException {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManager(request);
         Hotel entity = service.findById(id);
 

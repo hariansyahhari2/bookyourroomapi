@@ -4,7 +4,7 @@ import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.City;
 import com.hariansyah.bookyourrooms.api.entities.Region;
 import com.hariansyah.bookyourrooms.api.exceptions.ForeignKeyNotFoundException;
-import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidPermissionsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CityRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CityResponse;
@@ -70,7 +70,7 @@ public class CityController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateAdmin(request);
         City entity = modelMapper.map(model, City.class);
 
@@ -91,7 +91,7 @@ public class CityController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateAdmin(request);
 
         City entity = service.findById(id);
@@ -109,7 +109,7 @@ public class CityController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateAdmin(request);
 
         service.findById(id);
@@ -133,7 +133,7 @@ public class CityController {
             HttpServletRequest request
     ) throws IOException {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateAdmin(request);
 
         City entity = service.findById(id);

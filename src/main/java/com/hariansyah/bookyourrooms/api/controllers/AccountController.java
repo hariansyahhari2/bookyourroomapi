@@ -3,9 +3,8 @@ package com.hariansyah.bookyourrooms.api.controllers;
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.Account;
 import com.hariansyah.bookyourrooms.api.entities.CustomerIdentity;
-import com.hariansyah.bookyourrooms.api.enums.RoleEnum;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
-import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidPermissionsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.AccountRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CustomerIdentityWithAccountRequest;
@@ -77,10 +76,10 @@ public class AccountController {
             Account loggedInAccount = repository.findByUsername(loggedInUsername);
 
             if (loggedInAccount.getUsername().equals(account.getUsername()) || loggedInAccount.getRole().equals(GUEST) || loggedInAccount.getRole().equals(HOTEL_EMPLOYEE))
-                throw new InvalidCredentialsException();
+                throw new InvalidPermissionsException();
 
             if (loggedInAccount.getRole().equals(account.getRole()) || (loggedInAccount.getRole().equals(HOTEL_MANAGER) && account.getRole().equals(ADMIN)))
-                throw new InvalidCredentialsException();
+                throw new InvalidPermissionsException();
 
             account.setRole(GUEST);
             repository.save(account);
@@ -88,7 +87,7 @@ public class AccountController {
             AccountResponse data = modelMapper.map(account, AccountResponse.class);
             return ResponseMessage.success(data);
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @GetMapping("/{username}/make-hotel-employee")
@@ -106,14 +105,14 @@ public class AccountController {
             Account loggedInAccount = repository.findByUsername(loggedInUsername);
 
             if (loggedInAccount.getRole().equals(HOTEL_EMPLOYEE) || loggedInAccount.getRole().equals(GUEST))
-                throw new InvalidCredentialsException();
+                throw new InvalidPermissionsException();
             account.setRole(HOTEL_EMPLOYEE);
             repository.save(account);
 
             AccountResponse data = modelMapper.map(account, AccountResponse.class);
             return ResponseMessage.success(data);
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @GetMapping("/{username}/make-hotel-manager")
@@ -128,14 +127,14 @@ public class AccountController {
             String loggedInUsername = jwtTokenUtil.getUsernameFromToken(token);
             Account loggedInAccount = repository.findByUsername(loggedInUsername);
 
-            if (!loggedInAccount.getRole().equals(ADMIN)) throw new InvalidCredentialsException();
+            if (!loggedInAccount.getRole().equals(ADMIN)) throw new InvalidPermissionsException();
             account.setRole(HOTEL_MANAGER);
             repository.save(account);
 
             AccountResponse data = modelMapper.map(account, AccountResponse.class);
             return ResponseMessage.success(data);
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @GetMapping("/{username}/make-admin")
@@ -151,7 +150,7 @@ public class AccountController {
             Account loggedInAccount = repository.findByUsername(loggedInUsername);
 
             if (!loggedInAccount.getRole().equals(ADMIN)) {
-                throw new InvalidCredentialsException();
+                throw new InvalidPermissionsException();
             }
             account.setRole(ADMIN);
             repository.save(account);
@@ -159,7 +158,7 @@ public class AccountController {
             AccountResponse data = modelMapper.map(account, AccountResponse.class);
             return ResponseMessage.success(data);
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @PutMapping("/edit-account")

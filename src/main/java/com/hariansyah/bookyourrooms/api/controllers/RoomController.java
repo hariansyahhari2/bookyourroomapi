@@ -4,7 +4,7 @@ import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.Hotel;
 import com.hariansyah.bookyourrooms.api.entities.Room;
 import com.hariansyah.bookyourrooms.api.exceptions.EntityNotFoundException;
-import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidPermissionsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.RoomRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.RoomResponse;
@@ -72,7 +72,7 @@ public class RoomController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManager(request);
 
         Room entity = modelMapper.map(model, Room.class);
@@ -90,7 +90,7 @@ public class RoomController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManager(request);
 
         Room entity = service.findById(id);
@@ -108,7 +108,7 @@ public class RoomController {
             HttpServletRequest request
     ) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManager(request);
 
         service.findById(id);
@@ -132,7 +132,7 @@ public class RoomController {
             HttpServletRequest request
     ) throws IOException {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManager(request);
 
         Room entity = service.findById(id);

@@ -1,6 +1,8 @@
 package com.hariansyah.bookyourrooms.api.controllers.auth;
 
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidPermissionsException;
 import com.hariansyah.bookyourrooms.api.models.jwt.JwtRequest;
 import com.hariansyah.bookyourrooms.api.models.jwt.JwtResponse;
 import com.hariansyah.bookyourrooms.api.services.AccountService;
@@ -47,7 +49,7 @@ public class AuthController {
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+            throw new InvalidCredentialsException();
         }
     }
 }

@@ -82,7 +82,7 @@ public class BookingController {
             Account bookedBy = accountRepository.findByUsername(username);
             CustomerIdentity guest = customerIdentityService.findById(model.getGuestId());
 
-            if (!guest.getAccount().getUsername().equals(username)) throw new InvalidCredentialsException();
+            if (!guest.getAccount().getUsername().equals(username)) throw new InvalidPermissionsException();
 
             Booking entity = modelMapper.map(model, Booking.class);
             LocalDate checkIn = model.getCheckInDate();
@@ -125,12 +125,12 @@ public class BookingController {
             String username = jwtTokenUtil.getUsernameFromToken(token);
             Account account = accountRepository.findByUsername(username);
             if (!entity.getBookedBy().getUsername().equals(username) || account.getRole().equals(HOTEL_EMPLOYEE) || account.getRole().equals(HOTEL_MANAGER)) {
-                throw new InvalidCredentialsException();
+                throw new InvalidPermissionsException();
             }
             entity.setStatus(CANCELLED);
             return ResponseMessage.success(service.edit(entity));
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @GetMapping("/{id}/check-in")
@@ -149,12 +149,12 @@ public class BookingController {
             String username = jwtTokenUtil.getUsernameFromToken(token);
             Account account = accountRepository.findByUsername(username);
             if (!entity.getBookedBy().getUsername().equals(username) || account.getRole().equals(HOTEL_EMPLOYEE) || account.getRole().equals(HOTEL_MANAGER))
-                throw new InvalidCredentialsException();
+                throw new InvalidPermissionsException();
 
             entity.setStatus(CHECKED_IN);
             return ResponseMessage.success(service.edit(entity));
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @GetMapping
@@ -178,7 +178,7 @@ public class BookingController {
                     .collect(Collectors.toList());
             return ResponseMessage.success(data);
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @PostMapping("/hotel/{hotelId}")
@@ -187,7 +187,7 @@ public class BookingController {
             @RequestBody @Valid DateRequest model,
             HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManagerOrEmployee(request);
 
         List<Booking> entities = service.findAllBookingByHotelWithTimeRange(model.getFirstDate(), model.getLastDate(), hotelId);
@@ -203,7 +203,7 @@ public class BookingController {
             @RequestBody @Valid DateRequest model,
             HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManagerOrEmployee(request);
 
         List<Booking> entities = service.findAllBookingByRoomWithTimeRange(model.getFirstDate(), model.getLastDate(), roomId);
@@ -218,7 +218,7 @@ public class BookingController {
             @PathVariable Integer hotelId,
             HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManagerOrEmployee(request);
 
         List<Booking> entities = service.findAllBookingByHotelAllTime(hotelId);
@@ -233,7 +233,7 @@ public class BookingController {
             @PathVariable Integer roomId,
             HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) throw new InvalidCredentialsException();
+        if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManagerOrEmployee(request);
 
         List<Booking> entities = service.findAllBookingByRoomAllTime(roomId);

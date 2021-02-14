@@ -3,7 +3,7 @@ package com.hariansyah.bookyourrooms.api.controllers;
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.Account;
 import com.hariansyah.bookyourrooms.api.entities.CustomerIdentity;
-import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidPermissionsException;
 import com.hariansyah.bookyourrooms.api.models.ResponseMessage;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.requests.CustomerIdentityRequest;
 import com.hariansyah.bookyourrooms.api.models.entitymodels.responses.CustomerIdentityResponse;
@@ -52,7 +52,7 @@ public class CustomerIdentityController {
                 }
             }
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @PostMapping("/add")
@@ -74,7 +74,7 @@ public class CustomerIdentityController {
             CustomerIdentityResponse data = modelMapper.map(entity, CustomerIdentityResponse.class);
             return ResponseMessage.success(data);
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @PutMapping("{id}")
@@ -98,7 +98,7 @@ public class CustomerIdentityController {
                 return ResponseMessage.success(data);
             }
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 
     @GetMapping
@@ -119,6 +119,6 @@ public class CustomerIdentityController {
 
             return ResponseMessage.success(data);
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidPermissionsException();
     }
 }

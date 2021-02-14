@@ -3,7 +3,7 @@ package com.hariansyah.bookyourrooms.api.models.validations;
 import com.hariansyah.bookyourrooms.api.configs.jwt.JwtToken;
 import com.hariansyah.bookyourrooms.api.entities.Account;
 import com.hariansyah.bookyourrooms.api.enums.RoleEnum;
-import com.hariansyah.bookyourrooms.api.exceptions.InvalidCredentialsException;
+import com.hariansyah.bookyourrooms.api.exceptions.InvalidPermissionsException;
 import com.hariansyah.bookyourrooms.api.repositories.AccountRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ public class RoleValidation {
         Account account = accountRepository.findByUsername(username);
         if (account.getRole().equals(ADMIN) || account.getRole().equals(GUEST)) {
             System.out.println("TESTTTTT");
-            throw new InvalidCredentialsException();
+            throw new InvalidPermissionsException();
         }
     }
 
@@ -39,14 +39,14 @@ public class RoleValidation {
         String username = jwtTokenUtil.getUsernameFromToken(token);
         Account account = accountRepository.findByUsername(username);
         if (!account.getRole().equals(role)) {
-            throw new InvalidCredentialsException();
+            throw new InvalidPermissionsException();
         }
     }
 
     public static String startWithBearer(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (!token.startsWith("Bearer ")) {
-            throw new InvalidCredentialsException();
+            throw new InvalidPermissionsException();
         }
         return token;
     }
