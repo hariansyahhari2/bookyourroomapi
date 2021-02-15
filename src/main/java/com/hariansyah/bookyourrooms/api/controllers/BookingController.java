@@ -190,7 +190,7 @@ public class BookingController {
         if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManagerOrEmployee(request);
 
-        List<Booking> entities = service.findAllBookingByHotelWithTimeRange(model.getFirstDate(), model.getLastDate(), hotelId);
+        List<Booking> entities = service.findAllBookingByHotelWithTimeRange(model.getStartingDate(), model.getTargetDate(), hotelId);
         List<BookingResponse> data = entities.stream()
                 .map(e -> modelMapper.map(e, BookingResponse.class))
                 .collect(Collectors.toList());
@@ -206,7 +206,7 @@ public class BookingController {
         if (token == null || !token.startsWith("Bearer ")) throw new InvalidPermissionsException();
         validateManagerOrEmployee(request);
 
-        List<Booking> entities = service.findAllBookingByRoomWithTimeRange(model.getFirstDate(), model.getLastDate(), roomId);
+        List<Booking> entities = service.findAllBookingByRoomWithTimeRange(model.getStartingDate(), model.getTargetDate(), roomId);
         List<BookingResponse> data = entities.stream()
                 .map(e -> modelMapper.map(e, BookingResponse.class))
                 .collect(Collectors.toList());

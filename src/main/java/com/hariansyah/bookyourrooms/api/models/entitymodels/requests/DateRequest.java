@@ -3,23 +3,23 @@ package com.hariansyah.bookyourrooms.api.models.entitymodels.requests;
 import java.time.LocalDate;
 
 public class DateRequest {
-    private LocalDate firstDate;
+    private LocalDate startingDate;
 
-    private LocalDate lastDate;
+    private LocalDate targetDate;
 
-    public LocalDate getFirstDate() {
-        return firstDate;
+    public LocalDate getStartingDate() {
+        return startingDate;
     }
 
-    public void setFirstDate(LocalDate firstDate) {
-        this.firstDate = firstDate;
+    public void setStartingDate(LocalDate startingDate) {
+        this.startingDate = startingDate;
     }
 
-    public LocalDate getLastDate() {
-        return lastDate;
+    public LocalDate getTargetDate() {
+        return targetDate;
     }
 
-    public void setLastDate(LocalDate lastDate) {
-        this.lastDate = lastDate;
+    public void setTargetDate(LocalDate targetDate) {
+        this.targetDate = targetDate;
     }
 }
