@@ -197,26 +197,23 @@ public class BookingRepositoryImpl implements BookingRepository {
 
     @Override
     public List<Booking> findAllBookingByHotelWithTimeRange(LocalDate firstTimeRequest, LocalDate secondTimeRequest, Integer hotelId) {
-        String query = "SELECT b.id, b.room_count FROM booking b " +
-                "LEFT JOIN room r ON b.room_id=r.id " +
-                "LEFT JOIN hotel h ON r.hotel_id=h.id " +
-                "WHERE b.check_in_date <= ? " +
+        StringBuilder builder = new StringBuilder();
+        String query = builder.append(selectQuery()).append("WHERE b.check_in_date <= ? " +
                 "AND b.check_out_date >= ? " +
                 "WHERE b.check_in_date <= ? " +
                 "AND b.check_out_date >= ? " +
                 "AND h.id = ? " +
-                "AND b.is_deleted = 0";
-
+                "AND b.is_deleted = 0").toString();
         return jdbcTemplate.query(query, (rs, i) -> entityMapper(rs), secondTimeRequest, firstTimeRequest, hotelId);
     }
 
     @Override
     public List<Booking> findAllBookingByRoomWithTimeRange(LocalDate firstTimeRange, LocalDate secondTimeRange, Integer roomId) {
-        String query = "SELECT b.id, b.room_count FROM booking b " +
-                "WHERE b.check_in_date <= ? " +
+        StringBuilder builder = new StringBuilder();
+        String query = builder.append(selectQuery()).append("WHERE b.check_in_date <= ? " +
                 "AND b.check_out_date >= ? " +
                 "AND b.room_id = ? " +
-                "AND b.is_deleted = 0";
+                "AND b.is_deleted = 0").toString();
 
         return jdbcTemplate.query(query, (rs, i) -> entityMapper(rs), secondTimeRange, firstTimeRange, roomId);
     }
