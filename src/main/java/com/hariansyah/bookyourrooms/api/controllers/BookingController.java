@@ -181,7 +181,7 @@ public class BookingController {
         throw new InvalidPermissionsException();
     }
 
-    @PostMapping("/hotel/{hotelId}")
+    @GetMapping("/hotel/{hotelId}")
     public ResponseMessage<List<BookingResponse>> findAllBookingByHotelWithTimeRange(
             @PathVariable Integer hotelId,
             @RequestBody @Valid DateRequest model,

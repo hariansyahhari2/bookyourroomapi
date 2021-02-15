@@ -200,8 +200,6 @@ public class BookingRepositoryImpl implements BookingRepository {
         StringBuilder builder = new StringBuilder();
         String query = builder.append(selectQuery()).append("WHERE b.check_in_date <= ? " +
                 "AND b.check_out_date >= ? " +
-                "WHERE b.check_in_date <= ? " +
-                "AND b.check_out_date >= ? " +
                 "AND h.id = ? " +
                 "AND b.is_deleted = 0").toString();
         return jdbcTemplate.query(query, (rs, i) -> entityMapper(rs), secondTimeRequest, firstTimeRequest, hotelId);
